@@ -1,3 +1,69 @@
+/* Font teks: Plus Jakarta Sans (lokal, dari npm, tanpa CDN) */
+@import '@fontsource-variable/plus-jakarta-sans/wght.css';
+
+/* Font ikon: Material Symbols Outlined, sudah dipangkas hanya berisi ikon yang dipakai (~7 KB).
+   Cara menambah ikon baru: lihat resources/fonts/README.md */
+@font-face {
+    font-family: 'Material Symbols Outlined';
+    font-style: normal;
+    font-weight: 400;
+    font-display: block;
+    src: url('../fonts/material-symbols-subset.woff2') format('woff2');
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    [x-cloak] {
+        display: none !important;
+    }
+
+    html {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+        @apply bg-surface text-on-surface;
+        overscroll-behavior: none;
+    }
+}
+
+@layer components {
+    /* Pemakaian: <span class="material-symbols-outlined">mail</span> atau <x-icon name="mail" /> */
+    .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-smoothing: antialiased;
+        font-feature-settings: 'liga';
+        user-select: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+@media print {
+    aside, header, nav, .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: #fff;
+    }
+}

@@ -1,25 +1,29 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
+    <x-auth-heading title="Lupa kata sandi?"
+                    description="Masukkan email akun Anda. Kami akan mengirim tautan untuk membuat kata sandi baru." />
 
     <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <x-auth-session-status class="mb-5" :status="session('status')" />
 
-    <form method="POST" action="{{ route('password.email') }}">
+    <form method="POST" action="{{ route('password.email') }}" class="flex flex-col gap-5"
+          x-data="{ loading: false }" x-on:submit="loading = true" x-on:pageshow.window="loading = false">
         @csrf
 
         <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="flex flex-col gap-1.5">
+            <x-input-label for="email" value="Email" />
+            <x-text-input id="email" type="email" name="email" :value="old('email')" icon="mail"
+                          placeholder="nama@email.com" inputmode="email" required autofocus />
+            <x-input-error :messages="$errors->get('email')" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
+        <x-submit-button class="mt-1" icon="arrow_forward" loading-text="Mengirim tautan…">Kirim tautan reset</x-submit-button>
     </form>
+
+    <p class="mt-8 text-center">
+        <a href="{{ route('login') }}" class="inline-flex items-center gap-1.5 rounded-tm-sm text-label-md text-secondary transition-colors hover:text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-container">
+            <x-icon name="arrow_back" class="text-[18px]" />
+            <span>Kembali ke halaman masuk</span>
+        </a>
+    </p>
 </x-guest-layout>
