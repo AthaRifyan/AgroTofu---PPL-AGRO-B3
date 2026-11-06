@@ -28,6 +28,10 @@ class ProduksiService
      */
     public function jadwalkan(array $data, array $bahan, int $userId, bool $langsungMulai = false): Produksi
     {
+        if (empty($data['jam_rencana'])) {
+            throw new DomainException('Jam rencana produksi wajib diisi.');
+        }
+
         return DB::transaction(function () use ($data, $bahan, $userId, $langsungMulai) {
             $models = BahanBaku::whereIn('id', collect($bahan)->pluck('bahan_baku_id'))->get()->keyBy('id');
 
@@ -97,32 +101,6 @@ class ProduksiService
 
             return $produksi;
         });
-    }
-
-    public function updateTahap(Produksi $produksi, TahapProduksi $tahap, StatusTahap $status, int $userId): DetailProduksi
-    {
-        if ($produksi->status !== StatusProduksi::Berjalan) {
-            throw new DomainException('Tahapan hanya bisa diperbarui saat batch sedang berjalan.');
-        }
-
-        $detail = $produksi->tahapan()->where('tahap', $tahap->value)->firstOrFail();
-        $data   = ['status' => $status, 'petugas_id' => $userId];
-        $mulai  = $detail->waktu_mulai ?? now();
-
-        if ($status === StatusTahap::Berjalan) {
-            $data['waktu_mulai'] = $mulai;
-        }
-
-        if ($status === StatusTahap::Selesai) {
-            $selesai = now();
-            $data['waktu_mulai']   = $mulai;
-            $data['waktu_selesai'] = $selesai;
-            $data['durasi_menit']  = (int) round($mulai->diffInMinutes($selesai));
-        }
-
-        $detail->update($data);
-
-        return $detail;
     }
 
     /**

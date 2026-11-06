@@ -6,7 +6,7 @@
         </div>
         <h1 class="text-headline-xl-mobile tracking-tight text-on-surface sm:text-headline-lg">Selamat datang kembali</h1>
         <p class="mt-1.5 text-body-md leading-relaxed text-on-surface-variant">
-            Masuk ke TofuMind AI untuk memantau produksi hari ini.
+            Masuk ke AgroTofu AI untuk memantau produksi hari ini.
         </p>
     </div>
 

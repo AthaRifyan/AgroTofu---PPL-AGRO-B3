@@ -1,18 +1,26 @@
 <?php
-// app/Http/Controllers/HasilProduksiController.php
 
 namespace App\Http\Controllers;
 
 use App\Models\Produksi;
 use App\Services\ProduksiService;
+use App\Services\TahapProduksiService;
 use DomainException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class HasilProduksiController extends Controller
 {
-    public function store(Request $request, Produksi $produksi, ProduksiService $service): RedirectResponse
+    public function store(Request $request, Produksi $produksi, ProduksiService $service, TahapProduksiService $tahap): RedirectResponse
     {
+        // [REVISI #8] Dicek DULU sebelum validasi isian hasil, supaya peringatan tahapan
+        // tidak tertutup oleh pesan "isi hasil produksi".
+        try {
+            $tahap->pastikanSemuaSelesai($produksi);
+        } catch (DomainException $e) {
+            return back()->withInput()->with('error', $e->getMessage());
+        }
+
         // buang baris kosong (produk yang tidak dihasilkan) sebelum validasi
         $baris = collect($request->input('hasil', []))
             ->filter(fn ($r) => (float) ($r['jumlah_baik'] ?? 0) > 0 || (float) ($r['jumlah_reject'] ?? 0) > 0)

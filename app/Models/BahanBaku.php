@@ -3,6 +3,8 @@
 
 namespace App\Models;
 
+use App\Enums\TipeMutasi;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,5 +43,11 @@ class BahanBaku extends Model
     public function scopeStokMenipis(Builder $query): Builder
     {
         return $query->where('stok_minimum', '>', 0)->whereColumn('stok_saat_ini', '<=', 'stok_minimum');
+    }
+
+    public function pembelianTerakhir(): HasOne
+    {
+        return $this->hasOne(StokBahanBaku::class)
+            ->ofMany(['id' => 'max'], fn ($query) => $query->where('tipe', TipeMutasi::Masuk->value));
     }
 }

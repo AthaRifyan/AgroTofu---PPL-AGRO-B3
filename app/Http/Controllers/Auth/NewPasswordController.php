@@ -7,57 +7,83 @@ use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class NewPasswordController extends Controller
 {
-    /**
-     * Display the password reset view.
-     */
-    public function create(Request $request): View
+    /** Langkah 2: tampilkan form sandi baru (hanya jika email sudah dikonfirmasi). */
+    public function create(Request $request): View|RedirectResponse
     {
-        return view('auth.reset-password', ['request' => $request]);
+        $user = $this->penggunaDariSesi($request);
+
+        if (! $user) {
+            return $this->sesiBerakhir();
+        }
+
+        return view('auth.reset-password', ['email' => $user->email]);
     }
 
-    /**
-     * Handle an incoming new password request.
-     *
-     * @throws ValidationException
-     */
     public function store(Request $request): RedirectResponse
     {
+        $user = $this->penggunaDariSesi($request);
+
+        if (! $user) {
+            return $this->sesiBerakhir();
+        }
+
+        // error "tidak sama" ditempel di kolom KONFIRMASI (password_confirmation)
         $request->validate([
-            'token' => ['required'],
-            'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password'              => ['required', 'string', 'min:8', 'max:72'],
+            'password_confirmation' => ['required', 'same:password'],
+        ], [
+            'password.required'              => 'Kata sandi baru harus diisi.',
+            'password.min'                   => 'Kata sandi baru minimal 8 karakter.',
+            'password.max'                   => 'Kata sandi baru maksimal 72 karakter.',
+            'password_confirmation.required' => 'Konfirmasi kata sandi baru harus diisi.',
+            'password_confirmation.same'     => 'Konfirmasi kata sandi tidak sama dengan kata sandi baru.',
         ]);
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user) use ($request) {
-                $user->forceFill([
-                    'password' => Hash::make($request->password),
-                    'remember_token' => Str::random(60),
-                ])->save();
+        DB::transaction(function () use ($user, $request) {
+            // cast 'hashed' pada model User otomatis meng-hash
+            $user->forceFill([
+                'password'       => $request->input('password'),
+                'remember_token' => Str::random(60),
+            ])->save();
 
-                event(new PasswordReset($user));
+            // keluarkan semua sesi login lama milik akun ini (di perangkat lain)
+            if (config('session.driver') === 'database') {
+                DB::table('sessions')->where('user_id', $user->id)->delete();
             }
-        );
+        });
 
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
-        return $status == Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                        ->withErrors(['email' => __($status)]);
+        event(new PasswordReset($user));
+        Log::info('Kata sandi direset lewat konfirmasi email', ['user_id' => $user->id, 'ip' => $request->ip()]);
+
+        $request->session()->forget('reset_password');
+
+        // key 'password_diubah' dipakai frontend untuk memunculkan popup di halaman login
+        return redirect()->route('login')->with('password_diubah', 'Kata sandi berhasil diubah');
+    }
+
+    private function penggunaDariSesi(Request $request): ?User
+    {
+        $data = $request->session()->get('reset_password');
+
+        if (! $data || now()->getTimestamp() > $data['expires_at']) {
+            $request->session()->forget('reset_password');
+
+            return null;
+        }
+
+        return User::where('is_active', true)->find($data['user_id']);
+    }
+
+    private function sesiBerakhir(): RedirectResponse
+    {
+        return redirect()->route('password.request')
+            ->withErrors(['email' => 'Sesi konfirmasi email berakhir. Silakan konfirmasi email kembali.']);
     }
 }

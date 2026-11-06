@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <x-auth-heading title="Buat akun baru" description="Isi data berikut untuk mendaftar di TofuMind AI." />
+    <x-auth-heading title="Buat akun baru" description="Isi data berikut untuk mendaftar di AgroTofu AI." />
 
     <form method="POST" action="{{ route('register') }}" class="flex flex-col gap-5"
           x-data="{ loading: false }" x-on:submit="loading = true" x-on:pageshow.window="loading = false">

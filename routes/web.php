@@ -59,5 +59,6 @@ Route::middleware(['auth', 'aktif'])->group(function () {
     // ── SEMUA ROLE KERJA: lihat produksi ───────────────────────────────── ini pr untuk produksi
     Route::middleware('role:admin|manajer|karyawan|kasir')->group(function () {
         Route::resource('produksi', ProduksiController::class)->only(['index', 'show']);
+        Route::get('produksi/{produksi}/tahapan', [DetailProduksiController::class, 'index'])->name('produksi.tahapan.index');
     });
 });

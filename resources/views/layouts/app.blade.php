@@ -6,7 +6,7 @@
         <meta name="theme-color" content="#fff8f5">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'TofuMind AI') }}</title>
+        <title>{{ config('app.name', 'AgroTofu AI') }}</title>
 
         <!-- Font & ikon dimuat lokal lewat Vite (lihat resources/css/app.css) -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])

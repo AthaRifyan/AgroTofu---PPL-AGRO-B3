@@ -61,10 +61,13 @@ class SupplierController extends Controller
         $data = $request->validate([
             'kode'          => ['required', 'string', 'max:20', Rule::unique('suppliers', 'kode')->ignore($supplier)],
             'nama'          => ['required', 'string', 'max:100'],
-            'kontak_person' => ['nullable', 'string', 'max:100'],
-            'no_hp'         => ['nullable', 'string', 'max:20'],
+            'kontak_person' => ['nullable', 'string', 'max:100'],               // [REVISI #7] tetap opsional
+            'no_hp'         => ['required', 'digits_between:9,15'],             // [REVISI #7] wajib, hanya angka
             'alamat'        => ['nullable', 'string'],
             'catatan'       => ['nullable', 'string'],
+        ], [
+            'no_hp.required'       => 'Nomor HP wajib diisi.',
+            'no_hp.digits_between' => 'Nomor HP hanya boleh berisi angka (9 sampai 15 digit).',
         ]);
         $data['is_active'] = $request->boolean('is_active');
 

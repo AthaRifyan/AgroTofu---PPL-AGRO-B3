@@ -85,6 +85,34 @@ class StokService
             TipeMutasi::Penyesuaian, $stokFisik, $userId, null, $catatan);
     }
 
+    public function koreksiHarga(BahanBaku $bahan, float $hargaBaru, bool $koreksiPembelianTerakhir = false): ?StokBahanBaku
+    {
+        return DB::transaction(function () use ($bahan, $hargaBaru, $koreksiPembelianTerakhir) {
+            $bahan = BahanBaku::lockForUpdate()->findOrFail($bahan->id);
+            $bahan->update(['harga_terakhir' => $hargaBaru]);
+
+            if (! $koreksiPembelianTerakhir) {
+                return null;
+            }
+
+            $pembelian = StokBahanBaku::where('bahan_baku_id', $bahan->id)
+                ->where('tipe', TipeMutasi::Masuk->value)
+                ->latest('id')->lockForUpdate()->first();
+
+            if (! $pembelian) {
+                return null;
+            }
+
+            $pembelian->update(['harga_satuan' => $hargaBaru]);
+
+            Pengeluaran::where('referensi_type', $pembelian->getMorphClass())
+                ->where('referensi_id', $pembelian->id)
+                ->update(['jumlah' => round((float) $pembelian->jumlah * $hargaBaru, 2)]);
+
+            return $pembelian;
+        });
+    }
+
     /**
      * Inti semua mutasi: kunci baris → hitung → tolak jika negatif → update stok → catat riwayat.
      * lockForUpdate membuat transaksi lain menunggu, sehingga aman saat produksi dan penjualan berjalan bersamaan.

@@ -28,7 +28,7 @@
             <a href="{{ route('dashboard') }}" class="flex h-20 shrink-0 items-center gap-2 bg-surface-container-low px-6">
                 <span class="flex h-10 w-10 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container shadow-[0_2px_8px_-2px_rgba(77,42,0,0.12)]"><x-icon name="grain" class="text-[24px]" /></span>
                 <span class="flex flex-col">
-                    <span class="text-headline-sm leading-tight tracking-tight text-on-surface">TofuMind AI</span>
+                    <span class="text-headline-sm leading-tight tracking-tight text-on-surface">AgroTofu AI</span>
                     <span class="text-label-sm uppercase tracking-wider text-on-surface-variant">Smart Agro-Factory</span>
                 </span>
             </a>
@@ -95,7 +95,7 @@
         <div class="flex h-14 items-center justify-between px-4">
             <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5">
                 <span class="flex h-9 w-9 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container shadow-sm"><x-icon name="grain" class="text-[22px]" /></span>
-                <span class="text-headline-sm tracking-tight text-on-surface">TofuMind <span class="text-secondary">AI</span></span>
+                <span class="text-headline-sm tracking-tight text-on-surface">AgroTofu <span class="text-secondary">AI</span></span>
             </a>
             <x-badge tone="info">{{ $peran }}</x-badge>
         </div>

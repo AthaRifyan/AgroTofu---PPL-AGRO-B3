@@ -15,7 +15,7 @@ export default {
                 sans: ['"Plus Jakarta Sans Variable"', '"Plus Jakarta Sans"', ...defaultTheme.fontFamily.sans],
             },
 
-            // Palet TofuMind (dari desain referensi)
+            // Palet AgroTofu (dari desain referensi)
             colors: {
                 'primary': '#7f5700',
                 'primary-container': '#f2a900',

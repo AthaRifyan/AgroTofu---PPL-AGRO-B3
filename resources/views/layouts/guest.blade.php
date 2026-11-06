@@ -6,7 +6,7 @@
         <meta name="theme-color" content="#fff8f5">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'TofuMind AI') }}</title>
+        <title>{{ config('app.name', 'AgroTofu AI') }}</title>
 
         <!-- Font & ikon dimuat lokal lewat Vite (lihat resources/css/app.css) -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -24,7 +24,7 @@
                         <x-icon name="grain" />
                     </div>
                     <div>
-                        <div class="text-headline-sm tracking-tight text-on-surface">TofuMind <span class="text-secondary">AI</span></div>
+                        <div class="text-headline-sm tracking-tight text-on-surface">AgroTofu <span class="text-secondary">AI</span></div>
                         <p class="text-body-sm text-on-surface-variant">Sistem Manajemen Produksi Cerdas</p>
                     </div>
                 </div>
@@ -76,7 +76,7 @@
                         <div class="flex h-11 w-11 items-center justify-center rounded-tm-md bg-primary-container text-on-surface shadow-sm">
                             <x-icon name="grain" />
                         </div>
-                        <div class="text-headline-sm tracking-tight text-on-surface">TofuMind <span class="text-secondary">AI</span></div>
+                        <div class="text-headline-sm tracking-tight text-on-surface">AgroTofu <span class="text-secondary">AI</span></div>
                     </div>
 
                     {{ $slot }}

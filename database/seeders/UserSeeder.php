@@ -11,10 +11,10 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $akun = [
-            ['Super Admin',        'admin@tofumind.test',    'admin'],
-            ['Manajer Tahu',       'manajer@tofumind.test',  'manajer'],
-            ['Karyawan Produksi',  'karyawan@tofumind.test', 'karyawan'],
-            ['Kasir Pasar',        'kasir@tofumind.test',    'kasir'],
+            ['Super Admin',        'admin@agrotofu.test',    'admin'],
+            ['Manajer Tahu',       'manajer@agrotofu.test',  'manajer'],
+            ['Karyawan Produksi',  'karyawan@agrotofu.test', 'karyawan'],
+            ['Kasir Pasar',        'kasir@agrotofu.test',    'kasir'],
         ];
 
         foreach ($akun as [$nama, $email, $role]) {

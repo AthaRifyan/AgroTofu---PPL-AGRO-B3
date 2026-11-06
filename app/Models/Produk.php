@@ -21,6 +21,16 @@ class Produk extends Model
         'is_active'  => 'boolean',
     ];
 
+    public const KATALOG = [
+        'Tahu Putih'  => ['kode' => 'PRD-TP', 'satuan' => 'kg'],
+        'Tahu Kuning' => ['kode' => 'PRD-TK', 'satuan' => 'kg'],
+    ];
+
+    public static function namaTersedia(): array
+    {
+        return array_keys(self::KATALOG);
+    }
+
     public function mutasiStok(): HasMany { return $this->hasMany(StokProduk::class); }
     public function hasilProduksi(): HasMany { return $this->hasMany(HasilProduksi::class); }
     public function detailPenjualan(): HasMany { return $this->hasMany(DetailPenjualan::class); }
