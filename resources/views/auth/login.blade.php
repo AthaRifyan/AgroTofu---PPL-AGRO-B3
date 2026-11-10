@@ -1,4 +1,22 @@
 <x-guest-layout>
+    {{-- Popup setelah kata sandi berhasil diubah (flash 'password_diubah' dari NewPasswordController) --}}
+    @if (session('password_diubah'))
+        <div x-data="{ buka: true }" x-show="buka" x-cloak
+             x-init="$nextTick(() => $refs.tutup && $refs.tutup.focus())"
+             x-on:keydown.escape.window="buka = false"
+             class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="judul-sandi-diubah">
+            <div x-show="buka" x-transition.opacity x-on:click="buka = false" class="absolute inset-0 bg-inverse-surface/60"></div>
+            <div x-show="buka" x-transition class="relative w-full max-w-sm rounded-tm-md bg-surface-container-lowest p-6 text-center shadow-xl">
+                <span class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-tertiary-fixed text-on-tertiary-fixed">
+                    <x-icon name="check_circle" class="text-[32px]" />
+                </span>
+                <h2 id="judul-sandi-diubah" class="text-headline-sm font-bold text-on-surface">{{ session('password_diubah') }}</h2>
+                <p class="mt-1 text-body-md text-on-surface-variant">Silakan masuk menggunakan kata sandi yang baru.</p>
+                <x-btn type="button" x-ref="tutup" x-on:click="buka = false" class="mt-5 w-full">Masuk sekarang</x-btn>
+            </div>
+        </div>
+    @endif
+
     <div class="mb-8">
         <div class="mb-3 inline-flex items-center gap-2 rounded-tm-lg bg-surface-container-high px-3 py-1 text-label-sm text-on-surface-variant">
             <x-icon name="factory" class="text-[15px] text-secondary" />
@@ -13,7 +31,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-5" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-5"
+    <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-5" novalidate
           x-data="{ show: false, loading: false }"
           x-on:submit="loading = true"
           x-on:pageshow.window="loading = false">
@@ -24,7 +42,7 @@
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" type="email" name="email" :value="old('email')" icon="mail"
                           placeholder="nama@email.com" inputmode="email"
-                          required autofocus autocomplete="username" />
+                          autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" />
         </div>
 
@@ -33,7 +51,7 @@
             <x-input-label for="password" value="Kata sandi" />
             <x-text-input id="password" type="password" name="password" icon="lock"
                           placeholder="••••••••" x-bind:type="show ? 'text' : 'password'"
-                          required autocomplete="current-password">
+                          autocomplete="current-password">
                 <x-slot:trailing>
                     <button type="button" x-on:click="show = ! show"
                             x-bind:aria-label="show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"

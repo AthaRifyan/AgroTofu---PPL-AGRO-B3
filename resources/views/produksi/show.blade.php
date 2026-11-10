@@ -47,10 +47,31 @@
     @if ($produksi->catatan)<p class="mt-2 text-body-md text-on-surface-variant">{{ $produksi->catatan }}</p>@endif
 
     {{-- Alur tahapan --}}
-    <x-card class="mt-6" title="Alur tahapan produksi" :description="$status === 'berjalan' ? 'Tandai tiap tahap saat dikerjakan.' : 'Urutan tahap dari pencucian sampai pengemasan.'">
-        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    @php
+        // Status awal tiap tahap; JavaScript membandingkannya dengan data terbaru dari server
+        $awalStatus = $produksi->tahapan->mapWithKeys(fn ($t) => [$t->tahap->value => $t->status->value])->all();
+        $sebelumnyaSelesai = true;
+        $awalBisa = [];
+        foreach ($produksi->tahapan as $t) {
+            $awalBisa[$t->tahap->value] = $status === 'berjalan' && $t->status->value === 'menunggu' && $sebelumnyaSelesai;
+            $sebelumnyaSelesai = $sebelumnyaSelesai && $t->status->value === 'selesai';
+        }
+        $semuaTahapSelesai = $produksi->tahapan->every(fn ($t) => $t->status->value === 'selesai');
+        $fmt = fn ($d) => $d === null ? '--:--' : sprintf('%02d:%02d', intdiv((int) $d, 60), ((int) $d) % 60);
+    @endphp
+
+    <x-card class="mt-6" title="Alur tahapan produksi"
+            :description="$status === 'berjalan' ? 'Tahap dikerjakan berurutan. Isi durasi tahap, lalu mulai. Tahap selesai otomatis saat waktunya habis.' : 'Urutan tahap dari pencucian sampai pengemasan.'">
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4"
+             @if ($status === 'berjalan') x-data="tahapanLive('{{ route('produksi.tahapan.index', $produksi) }}', @js($awalStatus), @js($awalBisa), '{{ $status }}')" @endif>
             @foreach ($produksi->tahapan as $t)
-                @php $st = $t->status->value; @endphp
+                @php
+                    $st = $t->status->value;
+                    $kunci = $t->tahap->value;
+                    $bag = 'tahap_' . $kunci;
+                    $errTahap = $errors->getBag($bag);
+                    $bisaMulai = $awalBisa[$kunci];
+                @endphp
                 <div class="flex flex-col justify-between rounded-tm-md p-3 transition-all {{ $st === 'berjalan' ? 'bg-surface-container-high shadow-sm' : 'bg-surface-container-low hover:bg-surface-container' }}">
                     <div>
                         <div class="mb-2 flex items-center justify-between">
@@ -60,20 +81,49 @@
                             @else<x-icon name="radio_button_unchecked" class="text-[18px] text-outline" />@endif
                         </div>
                         <div class="text-label-lg text-on-surface">{{ $t->tahap->label() }}</div>
-                        <div class="mt-0.5 text-body-sm text-on-surface-variant">
-                            @if ($st === 'menunggu') Menunggu
-                            @elseif ($st === 'berjalan') Sedang dikerjakan
-                            @else Selesai @if ($t->durasi_menit !== null)· {{ $t->durasi_menit }} menit @endif @endif
-                        </div>
+
+                        @if ($st === 'menunggu')
+                            <div class="mt-0.5 text-body-sm text-on-surface-variant">Menunggu</div>
+                        @elseif ($st === 'berjalan')
+                            <div class="mt-2 rounded-tm-sm bg-surface-container-lowest/80 p-2 text-center">
+                                <div class="text-label-sm uppercase tracking-wider text-on-surface-variant">Sisa waktu</div>
+                                <div class="text-headline-md font-extrabold tabular-nums text-on-surface" role="timer"
+                                     @if ($status === 'berjalan') x-text="label('{{ $kunci }}') || '{{ $fmt($t->sisa_detik) }}'" @endif>{{ $fmt($t->sisa_detik) }}</div>
+                                <div class="text-body-sm text-on-surface-variant">Rencana {{ $t->durasi_rencana_menit }} menit</div>
+                            </div>
+                        @else
+                            {{-- Selesai: keterangan di atas nama petugas --}}
+                            @if ($t->keterangan_selesai)<div class="mt-0.5 text-body-sm text-on-surface-variant">{{ $t->keterangan_selesai }}</div>@endif
+                        @endif
+
                         @if ($t->petugas)<div class="text-body-sm text-on-surface-variant">{{ $t->petugas->name }}</div>@endif
                     </div>
 
-                    @if ($status === 'berjalan' && $kerja && $st !== 'selesai')
-                        <form method="POST" action="{{ route('produksi.tahap.update', [$produksi, $t->tahap->value]) }}" class="mt-3 rounded-tm-sm bg-surface-container-lowest/70 p-1.5">
-                            @csrf @method('PATCH')
-                            <input type="hidden" name="status" value="{{ $st === 'menunggu' ? 'berjalan' : 'selesai' }}">
-                            <x-btn size="sm" class="w-full" :variant="$st === 'menunggu' ? 'secondary' : 'primary'" :icon="$st === 'menunggu' ? 'play_arrow' : 'check'">{{ $st === 'menunggu' ? 'Mulai tahap' : 'Selesaikan tahap' }}</x-btn>
-                        </form>
+                    @if ($status === 'berjalan' && $kerja)
+                        @if ($st === 'menunggu')
+                            <form method="POST" action="{{ route('produksi.tahap.update', [$produksi, $kunci]) }}" class="mt-3 space-y-2 rounded-tm-sm bg-surface-container-lowest/70 p-2" novalidate>
+                                @csrf @method('PATCH')
+                                <input type="hidden" name="status" value="berjalan">
+                                <div>
+                                    <label for="durasi_{{ $kunci }}" class="mb-1 block text-label-md text-on-surface">Durasi tahap (menit)</label>
+                                    <x-text-input :id="'durasi_' . $kunci" name="durasi_menit" type="number" min="1" max="1440" step="1" inputmode="numeric"
+                                                  :bag="$bag" :value="$errTahap->has('durasi_menit') ? old('durasi_menit') : ''" placeholder="Contoh: 30"
+                                                  :disabled="! $bisaMulai" x-bind:disabled="! bisa('{{ $kunci }}')" class="!bg-surface-container-lowest" />
+                                    <x-input-error class="mt-1" :messages="$errTahap->get('durasi_menit')" />
+                                </div>
+                                <x-btn size="sm" class="w-full" variant="secondary" icon="play_arrow"
+                                       :disabled="! $bisaMulai" x-bind:disabled="! bisa('{{ $kunci }}')">Mulai tahap</x-btn>
+                                @unless ($bisaMulai)
+                                    <p class="text-body-sm text-on-surface-variant" x-show="! bisa('{{ $kunci }}')">Selesaikan tahap sebelumnya terlebih dahulu.</p>
+                                @endunless
+                            </form>
+                        @elseif ($st === 'berjalan')
+                            <form method="POST" action="{{ route('produksi.tahap.update', [$produksi, $kunci]) }}" class="mt-3 rounded-tm-sm bg-surface-container-lowest/70 p-1.5">
+                                @csrf @method('PATCH')
+                                <input type="hidden" name="status" value="selesai">
+                                <x-btn size="sm" class="w-full" icon="check">Selesaikan sekarang</x-btn>
+                            </form>
+                        @endif
                     @endif
                 </div>
             @endforeach
@@ -109,6 +159,12 @@
     {{-- Hasil produksi --}}
     @if ($status === 'berjalan' && $kerja)
         <x-card class="mt-4" title="Catat hasil produksi" description="Isi jumlah yang dihasilkan. Produk yang tidak dihasilkan boleh dikosongkan. Menyimpan hasil akan menyelesaikan batch.">
+            @unless ($semuaTahapSelesai)
+                <div class="mb-4 flex items-start gap-2 rounded-tm-md bg-secondary-fixed/60 px-4 py-3 text-label-md text-on-secondary-fixed-variant" role="note">
+                    <x-icon name="info" class="mt-px text-[18px]" />
+                    <span>Hasil produksi baru bisa disimpan setelah semua tahapan di atas selesai.</span>
+                </div>
+            @endunless
             <form method="POST" action="{{ route('produksi.hasil.store', $produksi) }}" class="flex flex-col gap-4"
                   onsubmit="return confirm('Simpan hasil dan selesaikan batch ini?')"
                   x-data="{ loading: false }" x-on:submit="loading = true" x-on:pageshow.window="loading = false">

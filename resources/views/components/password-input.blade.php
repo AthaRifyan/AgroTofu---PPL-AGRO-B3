@@ -4,13 +4,15 @@
     'autocomplete' => 'current-password',
     'placeholder' => '••••••••',
     'bag' => 'default',
+    'required' => true,
 ])
 
-{{-- Input kata sandi dengan ikon kunci dan tombol tampil/sembunyi --}}
+{{-- Input kata sandi dengan ikon kunci dan tombol tampil/sembunyi.
+     Kirim :required="false" bila pesan error harus datang dari server (bukan tooltip browser). --}}
 <div x-data="{ show: false }">
     <x-text-input :id="$id" :name="$name" type="password" icon="lock"
-                  :placeholder="$placeholder" :autocomplete="$autocomplete" :bag="$bag"
-                  x-bind:type="show ? 'text' : 'password'" required {{ $attributes }}>
+                  :placeholder="$placeholder" :autocomplete="$autocomplete" :bag="$bag" :required="$required"
+                  x-bind:type="show ? 'text' : 'password'" {{ $attributes }}>
         <x-slot:trailing>
             <button type="button" x-on:click="show = ! show"
                     x-bind:aria-label="show ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'"

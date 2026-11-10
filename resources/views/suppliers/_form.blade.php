@@ -14,8 +14,11 @@
         <x-field name="kontak_person" label="Kontak person (opsional)">
             <x-text-input id="kontak_person" name="kontak_person" type="text" icon="person" :value="old('kontak_person', $supplier->kontak_person)" maxlength="100" />
         </x-field>
-        <x-field name="no_hp" label="No. HP (opsional)">
-            <x-text-input id="no_hp" name="no_hp" type="tel" inputmode="tel" :value="old('no_hp', $supplier->no_hp)" maxlength="20" />
+        <x-field name="no_hp" label="No. HP" hint="Hanya angka, 9 sampai 15 digit.">
+            <x-text-input id="no_hp" name="no_hp" type="tel" inputmode="numeric" maxlength="15" pattern="[0-9]*" autocomplete="tel"
+                          :value="old('no_hp', $supplier->no_hp)" required
+                          x-init="$el.value = $el.value.replace(/\D/g, '')"
+                          x-on:input="$event.target.value = $event.target.value.replace(/\D/g, '')" />
         </x-field>
     </div>
 
