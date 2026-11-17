@@ -24,6 +24,16 @@
             </x-field>
         </x-card>
 
+        <x-card title="Durasi awal task pemasakan" description="Durasi ini ditetapkan manajer. Karyawan akan melihat durasi ini saat memulai task, dan AI dapat menyesuaikannya sebelum task dimulai.">
+            <x-field name="durasi_perebusan_menit" label="Durasi pemasakan (menit)">
+                <x-text-input id="durasi_perebusan_menit" name="durasi_perebusan_menit" type="number"
+                              min="1" max="1440" step="1" required inputmode="numeric"
+                              class="sm:max-w-xs"
+                              :value="old('durasi_perebusan_menit', 120)" />
+            </x-field>
+            <p class="mt-1 text-body-sm text-on-surface-variant">Contoh: 120 menit = 2 jam.</p>
+        </x-card>
+
         <x-card title="Bahan baku yang dipakai" description="Wajib ada minimal satu bahan berkategori utama (kedelai).">
             {{-- Legenda warna kategori --}}
             <div class="mb-3 flex flex-wrap gap-2 text-label-sm">

@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DetailProduksiController;
 use App\Http\Controllers\HasilProduksiController;
 use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\PrediksiAiController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\ProfileController;
@@ -47,6 +48,15 @@ Route::middleware(['auth', 'aktif'])->group(function () {
     Route::middleware('role:admin|manajer|karyawan')->group(function () {
         Route::patch('produksi/{produksi}/tahap/{tahap}', [DetailProduksiController::class, 'update'])->name('produksi.tahap.update');
         Route::post('produksi/{produksi}/hasil', [HasilProduksiController::class, 'store'])->name('produksi.hasil.store');
+
+        // BARU: menu "Prediksi AI" (daftar batch berjalan + riwayat)
+        Route::get('prediksi-ai', [PrediksiAiController::class, 'index'])->name('prediksi-ai.index');
+    });
+
+    // ── KARYAWAN: input gambar dan berat untuk prediksi AI ───────────────
+    Route::middleware('role:karyawan')->group(function () {
+        Route::post('produksi/{produksi}/prediksi-ai', [ProduksiController::class, 'prediksiAi'])
+            ->name('produksi.prediksi-ai');
     });
 
     // ── ADMIN + MANAJER + KASIR: penjualan & stok produk ─────────────────
@@ -56,7 +66,7 @@ Route::middleware(['auth', 'aktif'])->group(function () {
         Route::get('stok-produk', [StokProdukController::class, 'index'])->name('stok-produk.index');
     });
 
-    // ── SEMUA ROLE KERJA: lihat produksi ───────────────────────────────── ini pr untuk produksi
+    // ── SEMUA ROLE KERJA: lihat produksi ─────────────────────────────────
     Route::middleware('role:admin|manajer|karyawan|kasir')->group(function () {
         Route::resource('produksi', ProduksiController::class)->only(['index', 'show']);
         Route::get('produksi/{produksi}/tahapan', [DetailProduksiController::class, 'index'])->name('produksi.tahapan.index');

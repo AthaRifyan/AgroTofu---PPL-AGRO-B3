@@ -5,19 +5,22 @@ namespace App\Http\Controllers;
 
 use App\Enums\StatusProduksi;
 use App\Models\BahanBaku;
+use App\Models\PrediksiAi;
 use App\Models\Produk;
 use App\Models\Produksi;
+use App\Services\PrediksiAiService;
 use App\Services\ProduksiService;
 use DomainException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Validation\Rule;
 
 class ProduksiController extends Controller
 {
-    public function __construct(private readonly ProduksiService $service)
-    {
+    public function __construct(
+        private readonly ProduksiService $service,
+        private readonly PrediksiAiService $ai,
+    ) {
     }
 
     public function index(Request $request)
@@ -48,7 +51,8 @@ class ProduksiController extends Controller
     {
         $v = $request->validate([
             'tanggal_jadwal'        => ['required', 'date'],
-            'jam_rencana'           => ['nullable', 'date_format:H:i'],
+            'jam_rencana'           => ['required', 'date_format:H:i'],
+            'durasi_perebusan_menit' => ['required', 'integer', 'min:1', 'max:1440'],
             'catatan'               => ['nullable', 'string'],
             'langsung_mulai'        => ['sometimes', 'boolean'],
             'bahan'                 => ['required', 'array', 'min:1'],
@@ -78,7 +82,10 @@ class ProduksiController extends Controller
     public function show(Produksi $produksi)
     {
         return view('produksi.show', [
-            'produksi'   => $produksi->load(['penanggungJawab', 'tahapan.petugas', 'bahanBaku', 'hasil.produk', 'hasil.pencatat']),
+            'produksi'    => $produksi->load([
+                'penanggungJawab', 'tahapan.petugas', 'bahanBaku',
+                'hasil.produk', 'hasil.pencatat', 'prediksiAi.pengguna',
+            ]),
             'produkAktif' => Produk::where('is_active', true)->orderBy('nama')->get(),
         ]);
     }
@@ -103,5 +110,65 @@ class ProduksiController extends Controller
         }
 
         return back()->with('success', 'Jadwal produksi dibatalkan.');
+    }
+
+    /**
+     * Karyawan upload foto kedelai + berat -> Flask -> durasi tahap pemasakan
+     * disesuaikan otomatis.
+     */
+    public function prediksiAi(Produksi $produksi, Request $request): RedirectResponse
+    {
+        $v = $request->validate([
+            'berat_kedelai_kg' => ['required', 'numeric', 'gt:0'],
+            'images'           => ['required', 'array', 'min:1', 'max:' . config('services.soybean_ai.max_images')],
+            'images.*'         => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+        ], [
+            'images.required' => 'Upload minimal satu foto biji kedelai.',
+            'images.max'      => 'Maksimal :max foto dalam sekali prediksi.',
+            'images.*.image'  => 'Semua file harus berupa gambar.',
+            'images.*.max'    => 'Ukuran tiap foto maksimal 10 MB.',
+        ]);
+
+        try {
+            $prediksi = $this->ai->jalankan(
+                $produksi,
+                (float) $v['berat_kedelai_kg'],
+                $request->file('images'),
+                $request->user()->id,
+            );
+        } catch (DomainException $e) {
+            return back()->withInput(['berat_kedelai_kg' => $v['berat_kedelai_kg']])
+                ->with('error', $e->getMessage());
+        }
+
+        $ringkas = sprintf(
+            'Good %.1f%% · Bad %.1f%% · estimasi hasil tahu %.2f kg.',
+            $prediksi->good_percent,
+            $prediksi->bad_percent,
+            $prediksi->hasil_tahu_kg,
+        );
+
+        if ($prediksi->diterapkan) {
+            if ($prediksi->durasi_sebelumnya_menit === $prediksi->waktu_memasak_menit) {
+                $pesan = sprintf(
+                    'Durasi pemasakan tetap %s karena sesuai dengan prediksi AI. %s',
+                    PrediksiAi::label($prediksi->waktu_memasak_menit),
+                    $ringkas,
+                );
+            } else {
+                $pesan = sprintf(
+                    'Durasi pemasakan berhasil disesuaikan dari %s menjadi %s. %s',
+                    PrediksiAi::label($prediksi->durasi_sebelumnya_menit),
+                    PrediksiAi::label($prediksi->waktu_memasak_menit),
+                    $ringkas,
+                );
+            }
+
+            return back()->with('success', $pesan);
+        }
+
+        return back()->with('success',
+            'Prediksi tersimpan, durasi pemasakan tidak berubah (sudah sesuai atau tahapnya sudah berjalan). ' . $ringkas
+        );
     }
 }

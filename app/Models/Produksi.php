@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+// use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Produksi extends Model
 {
@@ -66,4 +67,18 @@ class Produksi extends Model
             return $berat > 0 ? round((float) $this->hasil->sum('jumlah_baik') / $berat, 2) : null;
         });
     }
+    public function prediksiAi(): HasMany
+{
+    return $this->hasMany(PrediksiAi::class)->latest('id');
 }
+}
+
+// ===== app/Models/Produksi.php : tambahkan relasi =====
+
+
+
+
+// ===== app/Models/DetailProduksi.php =====
+// 1) tambahkan ke $fillable:  'durasi_rencana_menit', 'disesuaikan_ai'
+// 2) tambahkan ke $casts:     'disesuaikan_ai' => 'boolean'
+// 3) pastikan jam_mulai & jam_selesai di-cast 'datetime'

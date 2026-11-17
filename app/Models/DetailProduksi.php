@@ -20,6 +20,8 @@ class DetailProduksi extends Model
         'waktu_selesai'        => 'datetime',
         'durasi_rencana_menit' => 'integer',
         'durasi_aktual_detik'  => 'integer',
+        'durasi_awal_menit'    => 'integer',   // BARU: durasi asli manajer
+        'disesuaikan_ai'       => 'boolean',   // BARU: true bila durasi diubah oleh AI
     ];
 
     public function produksi(): BelongsTo { return $this->belongsTo(Produksi::class); }
@@ -56,6 +58,24 @@ class DetailProduksi extends Model
             return $this->jenis_selesai === 'otomatis'
                 ? "Selesai otomatis selama {$this->durasi_rencana_menit} menit"
                 : 'Diselesaikan pada durasi ' . $this->durasi_aktual_label;
+        });
+    }
+
+    /**
+     * BARU: keterangan bila durasi tahap diubah oleh AI.
+     * Contoh: "Disesuaikan AI: 120 menit → 180 menit" atau "Durasi diisi AI: 180 menit".
+     * Null bila tidak diubah AI.
+     */
+    protected function keteranganAi(): Attribute
+    {
+        return Attribute::get(function () {
+            if (! $this->disesuaikan_ai) {
+                return null;
+            }
+
+            return $this->durasi_awal_menit === null
+                ? "Durasi diisi AI: {$this->durasi_rencana_menit} menit"
+                : "Disesuaikan AI: {$this->durasi_awal_menit} menit → {$this->durasi_rencana_menit} menit";
         });
     }
 }

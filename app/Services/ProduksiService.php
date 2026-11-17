@@ -23,7 +23,7 @@ class ProduksiService
     /**
      * Buat jadwal + batch. Stok TIDAK berkurang sampai batch dimulai (kecuali $langsungMulai).
      *
-     * @param array $data   tanggal_jadwal, jam_rencana?, catatan?
+     * @param array $data   tanggal_jadwal, jam_rencana, catatan?, durasi_perebusan_menit
      * @param array $bahan  [['bahan_baku_id' => 1, 'jumlah' => 25], ...]
      */
     public function jadwalkan(array $data, array $bahan, int $userId, bool $langsungMulai = false): Produksi
@@ -59,6 +59,13 @@ class ProduksiService
                     'tahap'  => $tahap,
                     'urutan' => $tahap->urutan(),
                     'status' => StatusTahap::Menunggu,
+                    'durasi_rencana_menit' => $tahap === TahapProduksi::Perebusan
+                        ? (int) $data['durasi_perebusan_menit']
+                        : null,
+                    'durasi_awal_menit' => $tahap === TahapProduksi::Perebusan
+                        ? (int) $data['durasi_perebusan_menit']
+                        : null,
+                    'disesuaikan_ai' => false,
                 ]);
             }
 

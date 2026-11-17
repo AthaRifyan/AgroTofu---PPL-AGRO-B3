@@ -46,6 +46,15 @@ class TahapProduksiService
                 );
             }
 
+            // Untuk tahap pemasakan (perebusan), durasi dari manajer/AI di database
+            // adalah sumber kebenaran. Jangan izinkan nilai dari browser menimpanya.
+            if ($tahap === TahapProduksi::Perebusan) {
+                if ($detail->durasi_rencana_menit === null || $detail->durasi_rencana_menit < 1) {
+                    throw new DomainException('Durasi pemasakan belum ditentukan manajer.');
+                }
+                $durasiMenit = (int) $detail->durasi_rencana_menit;
+            }
+
             $mulai = now();
 
             $detail->update([

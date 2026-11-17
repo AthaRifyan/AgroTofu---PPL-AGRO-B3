@@ -16,7 +16,10 @@ enum TahapProduksi: string
 
     public function label(): string
     {
-        return ucwords(str_replace('_', ' ', $this->value));
+        return match ($this) {
+            self::Perebusan => 'Pemasakan',
+            default => ucwords(str_replace('_', ' ', $this->value)),
+        };
     }
 
     public function urutan(): int

@@ -81,6 +81,8 @@
                             @else<x-icon name="radio_button_unchecked" class="text-[18px] text-outline" />@endif
                         </div>
                         <div class="text-label-lg text-on-surface">{{ $t->tahap->label() }}</div>
+                        {{-- AI: keterangan bila durasi tahap diisi/disesuaikan oleh prediksi AI --}}
+                        @if ($t->keterangan_ai)<div class="mt-0.5 text-body-sm text-secondary">{{ $t->keterangan_ai }}</div>@endif
 
                         @if ($st === 'menunggu')
                             <div class="mt-0.5 text-body-sm text-on-surface-variant">Menunggu</div>
@@ -106,8 +108,9 @@
                                 <input type="hidden" name="status" value="berjalan">
                                 <div>
                                     <label for="durasi_{{ $kunci }}" class="mb-1 block text-label-md text-on-surface">Durasi tahap (menit)</label>
+                                    {{-- AI: kolom durasi terisi otomatis bila tahap ini sudah diisi oleh prediksi AI --}}
                                     <x-text-input :id="'durasi_' . $kunci" name="durasi_menit" type="number" min="1" max="1440" step="1" inputmode="numeric"
-                                                  :bag="$bag" :value="$errTahap->has('durasi_menit') ? old('durasi_menit') : ''" placeholder="Contoh: 30"
+                                                  :bag="$bag" :value="$errTahap->has('durasi_menit') ? old('durasi_menit') : ($t->durasi_rencana_menit ?? '')" :readonly="$kunci === 'perebusan'" placeholder="Contoh: 30"
                                                   :disabled="! $bisaMulai" x-bind:disabled="! bisa('{{ $kunci }}')" class="!bg-surface-container-lowest" />
                                     <x-input-error class="mt-1" :messages="$errTahap->get('durasi_menit')" />
                                 </div>
@@ -129,6 +132,11 @@
             @endforeach
         </div>
     </x-card>
+
+    {{-- Prediksi AI (YOLO + Random Forest): mengisi durasi tahap pemasakan --}}
+    <div id="prediksi-ai" class="scroll-mt-24">
+        @include('produksi.prediksi_ai')
+    </div>
 
     {{-- Bahan baku --}}
     <x-card class="mt-4 !p-0 overflow-hidden">

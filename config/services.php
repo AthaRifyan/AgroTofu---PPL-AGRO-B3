@@ -28,6 +28,14 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'soybean_ai' => [
+        'url'             => env('SOYBEAN_AI_URL', 'https://aii-production-ff25e667.up.railway.app'),
+        'key'             => env('SOYBEAN_AI_KEY'),
+        'timeout'         => (int) env('SOYBEAN_AI_TIMEOUT', 120),
+        'max_images'      => (int) env('SOYBEAN_AI_MAX_IMAGES', 300),
+    ],
+
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
