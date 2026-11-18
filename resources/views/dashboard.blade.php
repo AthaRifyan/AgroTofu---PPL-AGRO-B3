@@ -26,16 +26,28 @@
                 @endif
             </p>
         </div>
-        <div class="flex flex-wrap items-center gap-2">
+        <div class="flex flex-wrap items-center justify-end gap-2 lg:self-start">
             @if ($kelola)
-                <x-btn :href="route('produksi.create')" icon="add">Jadwalkan produksi</x-btn>
+                <x-btn :href="route('produksi.create')" icon="add"> Jadwalkan produksi </x-btn>
             @endif
+
             @if ($kasirOk)
-                <x-btn :href="route('penjualan.create')" :variant="$kelola ? 'secondary' : 'primary'" icon="point_of_sale">Transaksi baru</x-btn>
+                <x-btn :href="route('penjualan.create')" :variant="$kelola ? 'secondary' : 'primary'" icon="point_of_sale" >
+                    Transaksi baru
+                </x-btn>
             @endif
+
             @unless ($kasirOk)
-                <x-btn :href="route('produksi.index')" icon="precision_manufacturing">Lihat produksi</x-btn>
+                <x-btn :href="route('produksi.index')" icon="precision_manufacturing">
+                    Lihat produksi
+                </x-btn>
             @endunless
+
+            @if ($user->hasRole('admin'))
+                <x-btn :href="route('admin.register.create')" variant="secondary" icon="person" >
+                    Tambah pengguna
+                </x-btn>
+            @endif
         </div>
     </div>
 

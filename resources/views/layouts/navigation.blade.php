@@ -10,6 +10,7 @@
         ['grup' => 'Gudang & data', 'route' => 'bahan-baku.index',  'match' => 'bahan-baku.*',  'label' => 'Bahan baku',  'icon' => 'grain',              'roles' => ['admin', 'manajer']],
         ['grup' => 'Gudang & data', 'route' => 'produk.index',      'match' => 'produk.*',      'label' => 'Produk',      'icon' => 'category',           'roles' => ['admin', 'manajer']],
         ['grup' => 'Gudang & data', 'route' => 'suppliers.index',   'match' => 'suppliers.*',   'label' => 'Supplier',    'icon' => 'local_shipping',     'roles' => ['admin', 'manajer']],
+        ['grup' => 'Manajemen', 'route' => 'admin.register.create', 'match' => 'admin.register.*', 'label' => 'Tambah pengguna', 'icon' => 'person', 'roles' => ['admin']],
     ];
 
     $menu    = collect($semua)->filter(fn ($m) => $m['roles'] === null || $user->hasAnyRole($m['roles']))->values();

@@ -38,7 +38,7 @@
                 @error('images.*') <p class="mt-1 text-body-sm text-error">{{ $message }}</p> @enderror
             </div>
 
-            <x-submit-button class="w-auto self-start" icon="psychology" loading-text="Memproses… jangan tutup halaman">
+            <x-submit-button class="w-auto self-start" loading-text="Memproses… jangan tutup halaman">
                 Jalankan prediksi AI
             </x-submit-button>
         </form>

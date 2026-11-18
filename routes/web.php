@@ -1,4 +1,6 @@
+
 <?php
+
 // routes/web.php
 
 use App\Http\Controllers\BahanBakuController;
@@ -13,6 +15,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StokBahanBakuController;
 use App\Http\Controllers\StokProdukController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__ . '/auth.php';
@@ -22,53 +25,98 @@ Route::middleware(['auth', 'aktif'])->group(function () {
     Route::redirect('/', '/dashboard');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
-    // Profil (bawaan Breeze)
+    // PROFIL
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // ── ADMIN + MANAJER: master data, stok, jadwal produksi ──────────────
+
+    // ── ADMIN: REGISTRASI / MANAJEMEN AKUN ──────────────────────────
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+
+        Route::get('register', [RegisteredUserController::class, 'create'])
+            ->name('register.create');
+
+        Route::post('register', [RegisteredUserController::class, 'store'])
+            ->name('register.store');
+
+    });
+
+
+    // ── ADMIN + MANAJER: MASTER DATA, STOK, JADWAL PRODUKSI ─────────
     Route::middleware('role:admin|manajer')->group(function () {
+
         Route::resource('suppliers', SupplierController::class)->except('show');
 
-        Route::resource('bahan-baku', BahanBakuController::class)->parameters(['bahan-baku' => 'bahanBaku']);
-        Route::post('bahan-baku/{bahanBaku}/stok-masuk', [StokBahanBakuController::class, 'masuk'])->name('bahan-baku.stok-masuk');
-        Route::post('bahan-baku/{bahanBaku}/opname', [StokBahanBakuController::class, 'opname'])->name('bahan-baku.opname');
+        Route::resource('bahan-baku', BahanBakuController::class)
+            ->parameters(['bahan-baku' => 'bahanBaku']);
+
+        Route::post('bahan-baku/{bahanBaku}/stok-masuk', [StokBahanBakuController::class, 'masuk'])
+            ->name('bahan-baku.stok-masuk');
+
+        Route::post('bahan-baku/{bahanBaku}/opname', [StokBahanBakuController::class, 'opname'])
+            ->name('bahan-baku.opname');
 
         Route::resource('produk', ProdukController::class)->except('show');
-        Route::post('stok-produk/{produk}/opname', [StokProdukController::class, 'opname'])->name('stok-produk.opname');
 
-        // didaftarkan SEBELUM produksi.show agar /produksi/create tidak tertangkap {produksi}
+        Route::post('stok-produk/{produk}/opname', [StokProdukController::class, 'opname'])
+            ->name('stok-produk.opname');
+
+        // Produksi
         Route::resource('produksi', ProduksiController::class)->only(['create', 'store']);
-        Route::post('produksi/{produksi}/mulai', [ProduksiController::class, 'mulai'])->name('produksi.mulai');
-        Route::post('produksi/{produksi}/batal', [ProduksiController::class, 'batal'])->name('produksi.batal');
+
+        Route::post('produksi/{produksi}/mulai', [ProduksiController::class, 'mulai'])
+            ->name('produksi.mulai');
+
+        Route::post('produksi/{produksi}/batal', [ProduksiController::class, 'batal'])
+            ->name('produksi.batal');
     });
 
-    // ── ADMIN + MANAJER + KARYAWAN: pengerjaan produksi ──────────────────
+
+    // ── ADMIN + MANAJER + KARYAWAN: PENGERJAAN PRODUKSI ────────────
     Route::middleware('role:admin|manajer|karyawan')->group(function () {
-        Route::patch('produksi/{produksi}/tahap/{tahap}', [DetailProduksiController::class, 'update'])->name('produksi.tahap.update');
-        Route::post('produksi/{produksi}/hasil', [HasilProduksiController::class, 'store'])->name('produksi.hasil.store');
 
-        // BARU: menu "Prediksi AI" (daftar batch berjalan + riwayat)
-        Route::get('prediksi-ai', [PrediksiAiController::class, 'index'])->name('prediksi-ai.index');
+        Route::patch('produksi/{produksi}/tahap/{tahap}', [DetailProduksiController::class, 'update'])
+            ->name('produksi.tahap.update');
+
+        Route::post('produksi/{produksi}/hasil', [HasilProduksiController::class, 'store'])
+            ->name('produksi.hasil.store');
+
+        Route::get('prediksi-ai', [PrediksiAiController::class, 'index'])
+            ->name('prediksi-ai.index');
     });
 
-    // ── KARYAWAN: input gambar dan berat untuk prediksi AI ───────────────
+
+    // ── KARYAWAN: INPUT GAMBAR DAN BERAT UNTUK PREDIKSI AI ────────
     Route::middleware('role:karyawan')->group(function () {
+
         Route::post('produksi/{produksi}/prediksi-ai', [ProduksiController::class, 'prediksiAi'])
             ->name('produksi.prediksi-ai');
     });
 
-    // ── ADMIN + MANAJER + KASIR: penjualan & stok produk ─────────────────
+
+    // ── ADMIN + MANAJER + KASIR: PENJUALAN & STOK PRODUK ──────────
     Route::middleware('role:admin|manajer|kasir')->group(function () {
-        Route::resource('penjualan', PenjualanController::class)->only(['index', 'create', 'store', 'show']);
-        Route::post('penjualan/{penjualan}/batal', [PenjualanController::class, 'batal'])->name('penjualan.batal');
-        Route::get('stok-produk', [StokProdukController::class, 'index'])->name('stok-produk.index');
+
+        Route::resource('penjualan', PenjualanController::class)
+            ->only(['index', 'create', 'store', 'show']);
+
+        Route::post('penjualan/{penjualan}/batal', [PenjualanController::class, 'batal'])
+            ->name('penjualan.batal');
+
+        Route::get('stok-produk', [StokProdukController::class, 'index'])
+            ->name('stok-produk.index');
     });
 
-    // ── SEMUA ROLE KERJA: lihat produksi ─────────────────────────────────
+
+    // ── SEMUA ROLE KERJA: LIHAT PRODUKSI ──────────────────────────
     Route::middleware('role:admin|manajer|karyawan|kasir')->group(function () {
-        Route::resource('produksi', ProduksiController::class)->only(['index', 'show']);
-        Route::get('produksi/{produksi}/tahapan', [DetailProduksiController::class, 'index'])->name('produksi.tahapan.index');
+
+        Route::resource('produksi', ProduksiController::class)
+            ->only(['index', 'show']);
+
+        Route::get('produksi/{produksi}/tahapan', [DetailProduksiController::class, 'index'])
+            ->name('produksi.tahapan.index');
     });
+
 });

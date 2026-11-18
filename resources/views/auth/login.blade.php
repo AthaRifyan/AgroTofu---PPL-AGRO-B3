@@ -65,12 +65,11 @@
         </div>
 
         <!-- Remember Me & Forgot Password -->
-        <div class="flex items-center justify-between gap-4">
+        <!-- <div class="flex items-center justify-between gap-4">
             <label for="remember_me" class="inline-flex cursor-pointer select-none items-center gap-2.5">
-                <input id="remember_me" type="checkbox" name="remember"
-                       class="h-5 w-5 rounded-tm-sm border-outline text-secondary shadow-sm focus:ring-2 focus:ring-secondary focus:ring-offset-0">
+                <input id="remember_me" type="checkbox" name="remember" class="h-5 w-5 rounded-tm-sm border-outline text-secondary shadow-sm focus:ring-2 focus:ring-secondary focus:ring-offset-0">
                 <span class="text-label-md text-on-surface-variant">Ingat saya di perangkat ini</span>
-            </label>
+            </label> -->
 
             @if (Route::has('password.request'))
                 <a href="{{ route('password.request') }}"
