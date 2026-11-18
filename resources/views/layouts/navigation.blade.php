@@ -4,7 +4,7 @@
     // Menu sesuai role (hak akses mengikuti routes/web.php)
     $semua = [
         ['grup' => 'Operasional', 'route' => 'dashboard',         'match' => 'dashboard',     'label' => 'Dasbor',      'icon' => 'dashboard',              'roles' => null],
-        ['grup' => 'Operasional', 'route' => 'produksi.index',    'match' => 'produksi.*',    'label' => 'Produksi',    'icon' => 'precision_manufacturing', 'roles' => ['admin', 'manajer', 'karyawan', 'kasir']],
+        ['grup' => 'Operasional', 'route' => 'produksi.index',    'match' => 'produksi.*',    'label' => 'Produksi',    'icon' => 'precision_manufacturing', 'roles' => ['admin', 'manajer', 'karyawan']],
         ['grup' => 'Operasional', 'route' => 'penjualan.create',  'match' => 'penjualan.*',   'label' => 'Kasir',       'icon' => 'point_of_sale',          'roles' => ['admin', 'manajer', 'kasir']],
         ['grup' => 'Gudang & data', 'route' => 'stok-produk.index', 'match' => 'stok-produk.*', 'label' => 'Stok produk', 'icon' => 'inventory_2',         'roles' => ['admin', 'manajer', 'kasir']],
         ['grup' => 'Gudang & data', 'route' => 'bahan-baku.index',  'match' => 'bahan-baku.*',  'label' => 'Bahan baku',  'icon' => 'grain',              'roles' => ['admin', 'manajer']],

@@ -110,7 +110,7 @@ Route::middleware(['auth', 'aktif'])->group(function () {
 
 
     // ── SEMUA ROLE KERJA: LIHAT PRODUKSI ──────────────────────────
-    Route::middleware('role:admin|manajer|karyawan|kasir')->group(function () {
+    Route::middleware('role:admin|manajer|karyawan')->group(function () {
 
         Route::resource('produksi', ProduksiController::class)
             ->only(['index', 'show']);
