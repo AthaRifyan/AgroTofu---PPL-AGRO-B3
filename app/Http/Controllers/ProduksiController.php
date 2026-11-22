@@ -116,17 +116,55 @@ class ProduksiController extends Controller
      * Karyawan upload foto kedelai + berat -> Flask -> durasi tahap pemasakan
      * disesuaikan otomatis.
      */
-    public function prediksiAi(Produksi $produksi, Request $request): RedirectResponse
-    {
+    
+/**
+ * Karyawan melakukan scan kedelai per maksimal 10 kg.
+ * Hasil setiap scan disimpan dan durasi pemasakan diakumulasikan.
+ */
+    public function prediksiAi(
+        Produksi $produksi,
+        Request $request
+    ): RedirectResponse {
         $v = $request->validate([
-            'berat_kedelai_kg' => ['required', 'numeric', 'gt:0'],
-            'images'           => ['required', 'array', 'min:1', 'max:' . config('services.soybean_ai.max_images')],
-            'images.*'         => ['file', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+            'berat_kedelai_kg' => [
+                'required',
+                'numeric',
+                'gt:0',
+                'lte:10',
+            ],
+
+            'images' => [
+                'required',
+                'array',
+                'min:1',
+                'max:' . config('services.soybean_ai.max_images'),
+            ],
+
+            'images.*' => [
+                'required',
+                'file',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:10240',
+            ],
         ], [
-            'images.required' => 'Upload minimal satu foto biji kedelai.',
-            'images.max'      => 'Maksimal :max foto dalam sekali prediksi.',
-            'images.*.image'  => 'Semua file harus berupa gambar.',
-            'images.*.max'    => 'Ukuran tiap foto maksimal 10 MB.',
+            'berat_kedelai_kg.lte' =>
+                'Berat kedelai maksimal 10 kg untuk setiap scan.',
+
+            'images.required' =>
+                'Ambil foto menggunakan kamera atau pilih foto dari galeri.',
+
+            'images.min' =>
+                'Upload minimal satu foto biji kedelai.',
+
+            'images.max' =>
+                'Maksimal :max foto dalam sekali scan.',
+
+            'images.*.image' =>
+                'Semua file harus berupa gambar.',
+
+            'images.*.max' =>
+                'Ukuran setiap foto maksimal 10 MB.',
         ]);
 
         try {
@@ -137,38 +175,50 @@ class ProduksiController extends Controller
                 $request->user()->id,
             );
         } catch (DomainException $e) {
-            return back()->withInput(['berat_kedelai_kg' => $v['berat_kedelai_kg']])
+            return back()
+                ->withInput([
+                    'berat_kedelai_kg' => $v['berat_kedelai_kg'],
+                ])
                 ->with('error', $e->getMessage());
         }
 
+        // Hitung akumulasi semua scan pada batch.
+        $riwayat = PrediksiAi::query()
+            ->where('produksi_id', $produksi->id);
+
+        $totalBerat = (float) (clone $riwayat)
+            ->sum('berat_kedelai_kg');
+
+        $totalHasilTahu = (float) (clone $riwayat)
+            ->sum('hasil_tahu_kg');
+
+        $totalDurasiMenit = (int) (clone $riwayat)
+            ->sum('waktu_memasak_menit');
+
         $ringkas = sprintf(
-            'Good %.1f%% · Bad %.1f%% · estimasi hasil tahu %.2f kg.',
-            $prediksi->good_percent,
-            $prediksi->bad_percent,
+            'Scan ini: %.2f kg kedelai, estimasi tahu %.2f kg, durasi %s.',
+            $prediksi->berat_kedelai_kg,
             $prediksi->hasil_tahu_kg,
+            PrediksiAi::label($prediksi->waktu_memasak_menit),
         );
 
         if ($prediksi->diterapkan) {
-            if ($prediksi->durasi_sebelumnya_menit === $prediksi->waktu_memasak_menit) {
-                $pesan = sprintf(
-                    'Durasi pemasakan tetap %s karena sesuai dengan prediksi AI. %s',
-                    PrediksiAi::label($prediksi->waktu_memasak_menit),
-                    $ringkas,
-                );
-            } else {
-                $pesan = sprintf(
-                    'Durasi pemasakan berhasil disesuaikan dari %s menjadi %s. %s',
-                    PrediksiAi::label($prediksi->durasi_sebelumnya_menit),
-                    PrediksiAi::label($prediksi->waktu_memasak_menit),
-                    $ringkas,
-                );
-            }
+            $pesan = sprintf(
+                '%s Total seluruh scan: %.2f kg kedelai, estimasi hasil tahu %.2f kg, total durasi pemasakan %s.',
+                $ringkas,
+                $totalBerat,
+                $totalHasilTahu,
+                PrediksiAi::label($totalDurasiMenit),
+            );
 
             return back()->with('success', $pesan);
         }
 
-        return back()->with('success',
-            'Prediksi tersimpan, durasi pemasakan tidak berubah (sudah sesuai atau tahapnya sudah berjalan). ' . $ringkas
+        return back()->with(
+            'success',
+            $ringkas .
+            ' Prediksi tersimpan, tetapi tidak diterapkan karena task pemasakan sudah dimulai atau tidak lagi menunggu.'
         );
     }
+
 }
