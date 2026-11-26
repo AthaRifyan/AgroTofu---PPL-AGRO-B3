@@ -7,7 +7,7 @@
     $base = 'w-full rounded-tm-md border bg-surface-container-low text-body-md text-on-surface transition-all placeholder:text-outline focus:bg-surface-bright focus:outline-none focus:ring-2 disabled:opacity-60 [.auth_&]:bg-surface-container-lowest [.auth_&]:shadow-sm '
         . ($invalid
             ? 'border-error focus:border-error focus:ring-error/40'
-            : 'border-transparent [.auth_&]:border-outline-variant focus:border-primary-container focus:ring-primary-container');
+            : 'border-outline-variant focus:border-primary-container focus:ring-primary-container');
 @endphp
 
 @if ($icon || isset($trailing))

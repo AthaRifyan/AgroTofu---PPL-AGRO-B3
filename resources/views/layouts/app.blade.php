@@ -11,7 +11,7 @@
         <!-- Font & ikon dimuat lokal lewat Vite (lihat resources/css/app.css) -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="bg-background font-sans text-on-surface antialiased">
+    <body class="bg-surface font-sans text-on-surface antialiased" style="background-color:#fff8f5;color:#2d1600;">
         @include('layouts.navigation')
 
         <div class="lg:pl-72">

@@ -362,7 +362,7 @@
                         x-bind:disabled="fotos.length >= maxFoto || loading"
                         class="inline-flex items-center justify-center gap-2 rounded-tm-md bg-primary px-4 py-3 text-label-md font-semibold text-on-primary transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        <x-icon name="photo_camera" class="text-[20px]" />
+                        <x-icon name="sensors" class="text-[20px]" />
                         Ambil Foto
                     </button>
 
@@ -372,7 +372,7 @@
                         x-bind:disabled="fotos.length >= maxFoto || loading"
                         class="inline-flex items-center justify-center gap-2 rounded-tm-md border border-outline px-4 py-3 text-label-md font-semibold text-on-surface transition hover:bg-surface-container disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                        <x-icon name="photo_library" class="text-[20px]" />
+                        <x-icon name="add_box" class="text-[20px]" />
                         Pilih dari Galeri
                     </button>
 
@@ -437,7 +437,7 @@
                                 x-bind:disabled="fotos.length >= maxFoto"
                                 class="inline-flex items-center justify-center gap-2 rounded-tm-md bg-primary px-5 py-3 text-label-md font-semibold text-on-primary transition hover:opacity-90 disabled:opacity-50"
                             >
-                                <x-icon name="photo_camera" class="text-[20px]" />
+                                <x-icon name="sensors" class="text-[20px]" />
                                 Ambil Gambar
                             </button>
 
@@ -520,7 +520,7 @@
                     x-show="fotos.length === 0"
                     class="mt-3 rounded-tm-md border border-dashed border-outline-variant p-5 text-center text-body-sm text-on-surface-variant"
                 >
-                    <x-icon name="image" class="mb-1 text-[28px]" />
+                    <x-icon name="add_box" class="mb-1 text-[28px]" />
                     <span class="block">Belum ada foto yang dipilih.</span>
                     <span class="block">Ambil foto menggunakan kamera atau pilih dari galeri.</span>
                 </p>

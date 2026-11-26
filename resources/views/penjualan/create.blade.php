@@ -64,7 +64,7 @@
             <div id="pembayaran" class="lg:col-span-4 lg:sticky lg:top-28">
                 <x-card>
                     <div class="mb-3 flex items-center justify-between rounded-tm-md bg-surface-container-low px-3 py-2.5">
-                        <span class="flex items-center gap-1.5 text-label-lg text-on-surface"><x-icon name="shopping_cart_checkout" class="text-[20px] text-primary" /> Pesanan saat ini</span>
+                        <span class="flex items-center gap-1.5 text-label-lg text-on-surface"><x-icon name="shopping_cart" class="text-[20px] text-primary" /> Pesanan saat ini</span>
                         <button type="button" x-on:click="kosongkan()" x-show="cart.length > 0" x-cloak class="inline-flex items-center gap-0.5 rounded-tm-sm text-label-sm text-error hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-error">
                             <x-icon name="delete" class="text-[14px]" /> Reset
                         </button>

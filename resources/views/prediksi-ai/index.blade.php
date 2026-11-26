@@ -145,7 +145,7 @@
                         <tr>
                             <td colspan="5" class="p-6">
                                 <x-empty-state
-                                    icon="psychology"
+                                    icon="science"
                                     title="Tidak ada batch yang berjalan"
                                     text="Prediksi AI hanya bisa dijalankan pada batch yang sudah dimulai."
                                 />
@@ -313,7 +313,7 @@
                                 </div>
 
                                 <div class="my-0.5 text-secondary">
-                                    <x-icon name="arrow_downward" class="text-[16px]" />
+                                    <x-icon name="expand_more" class="text-[16px]" />
                                 </div>
 
                                 <div class="break-words font-semibold text-on-surface">
@@ -355,7 +355,7 @@
 
                     <div class="p-6">
                         <x-empty-state
-                            icon="psychology"
+                            icon="science"
                             title="Belum ada prediksi"
                             text="Riwayat muncul setelah prediksi AI pertama dijalankan."
                         />
