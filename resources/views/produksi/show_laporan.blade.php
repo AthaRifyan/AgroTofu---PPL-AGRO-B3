@@ -285,55 +285,49 @@
         title="Bahan baku yang digunakan"
         description="Daftar bahan baku yang digunakan pada batch produksi ini."
     >
-        <div class="space-y-3">
-
-            @forelse ($produksi->bahanBaku as $bahan)
-                <div class="flex items-center justify-between gap-3 rounded-tm-md bg-surface-container-low p-3">
-
-                    <div class="flex min-w-0 items-center gap-3">
-                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                            <x-icon name="package" class="h-5 w-5" />
-                        </div>
-
-                        <div class="min-w-0">
-                            <p class="break-words text-label-lg font-semibold text-on-surface">
-                                {{ $bahan->nama }}
-                            </p>
-
-                            <p class="text-body-sm text-on-surface-variant">
-                                {{ ucfirst($bahan->kategori) }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="shrink-0 text-right">
-                        <p class="font-bold text-on-surface">
-                            {{ number_format(
-                                (float) $bahan->pivot->jumlah_dipakai,
-                                2,
-                                ',',
-                                '.'
-                            ) }}
-                            {{ $bahan->satuan }}
-                        </p>
-
-                        <p class="text-xs text-on-surface-variant">
-                            Digunakan
-                        </p>
-                    </div>
-
-                </div>
-            @empty
-                <div class="rounded-tm-md bg-surface-container-low p-4 text-center">
-                    <x-icon name="package-open" class="mx-auto h-8 w-8 text-on-surface-variant" />
-
-                    <p class="mt-2 text-body-sm text-on-surface-variant">
-                        Tidak ada bahan baku tercatat.
-                    </p>
-                </div>
-            @endforelse
-
-        </div>
+        @if ($produksi->bahanBaku->isEmpty())
+            <div class="rounded-tm-md bg-surface-container-low p-6 text-center">
+                <x-icon name="package-open" class="mx-auto h-10 w-10 text-on-surface-variant" />
+                <p class="mt-2 font-semibold text-on-surface-variant">Tidak ada bahan baku tercatat.</p>
+            </div>
+        @else
+            <div class="overflow-x-auto rounded-tm-md border border-outline-variant">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-outline-variant bg-surface-container-low text-left">
+                            <th class="px-4 py-3 font-semibold text-on-surface-variant">#</th>
+                            <th class="px-4 py-3 font-semibold text-on-surface-variant">Nama Bahan</th>
+                            <th class="px-4 py-3 font-semibold text-on-surface-variant">Kategori</th>
+                            <th class="px-4 py-3 text-right font-semibold text-on-surface-variant">Jumlah Dipakai</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant">
+                        @foreach ($produksi->bahanBaku as $i => $bahan)
+                            <tr class="bg-surface transition hover:bg-surface-container-low">
+                                <td class="px-4 py-3 text-on-surface-variant">{{ $i + 1 }}</td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
+                                            <x-icon name="package" class="h-4 w-4" />
+                                        </div>
+                                        <span class="font-semibold text-on-surface">{{ $bahan->nama }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <span class="rounded-full bg-surface-container-high px-3 py-1 text-xs font-medium text-on-surface-variant">
+                                        {{ ucfirst($bahan->kategori) }}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-right font-bold text-on-surface">
+                                    {{ number_format((float) $bahan->pivot->jumlah_dipakai, 2, ',', '.') }}
+                                    <span class="font-normal text-on-surface-variant">{{ $bahan->satuan }}</span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </x-card>
 
 
@@ -650,73 +644,94 @@
                 </div>
 
 
+                {{-- RINGKASAN STATISTIK PREDIKSI --}}
                 <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
 
                     {{-- GOOD --}}
-                    <div class="rounded-tm-md border border-outline-variant bg-surface-container-low p-4">
+                    <div class="rounded-tm-md border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950/30">
                         <div class="flex items-center gap-2">
                             <span class="h-2.5 w-2.5 rounded-full bg-green-600"></span>
-
-                            <p class="text-body-sm text-on-surface-variant">
-                                Kedelai Good
-                            </p>
+                            <p class="text-body-sm text-on-surface-variant">Kedelai Good</p>
                         </div>
-
-                        <p class="mt-2 text-title-lg font-bold text-on-surface">
+                        <p class="mt-2 text-title-xl font-bold text-green-700 dark:text-green-400">
                             {{ number_format($prediksi->good_percent, 2) }}%
                         </p>
+                        <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-green-200 dark:bg-green-900">
+                            <div class="h-full rounded-full bg-green-500" style="width: {{ $prediksi->good_percent }}%"></div>
+                        </div>
                     </div>
-
 
                     {{-- BAD --}}
-                    <div class="rounded-tm-md border border-outline-variant bg-surface-container-low p-4">
+                    <div class="rounded-tm-md border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-950/30">
                         <div class="flex items-center gap-2">
-                            <span class="h-2.5 w-2.5 rounded-full bg-error"></span>
-
-                            <p class="text-body-sm text-on-surface-variant">
-                                Kedelai Bad
-                            </p>
+                            <span class="h-2.5 w-2.5 rounded-full bg-red-500"></span>
+                            <p class="text-body-sm text-on-surface-variant">Kedelai Bad</p>
                         </div>
-
-                        <p class="mt-2 text-title-lg font-bold text-on-surface">
+                        <p class="mt-2 text-title-xl font-bold text-red-600 dark:text-red-400">
                             {{ number_format($prediksi->bad_percent, 2) }}%
                         </p>
+                        <div class="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-red-200 dark:bg-red-900">
+                            <div class="h-full rounded-full bg-red-500" style="width: {{ $prediksi->bad_percent }}%"></div>
+                        </div>
                     </div>
-
 
                     {{-- HASIL TAHU --}}
-                    <div class="rounded-tm-md border border-outline-variant bg-surface-container-low p-4">
+                    <div class="rounded-tm-md border border-primary/20 bg-primary-container/30 p-4">
                         <div class="flex items-center gap-2">
                             <x-icon name="package-check" class="h-5 w-5 text-primary" />
-
-                            <p class="text-body-sm text-on-surface-variant">
-                                Prediksi hasil tahu
-                            </p>
+                            <p class="text-body-sm text-on-surface-variant">Prediksi hasil tahu</p>
                         </div>
-
-                        <p class="mt-2 text-title-lg font-bold text-on-surface">
-                            {{ number_format($prediksi->hasil_tahu_kg, 2) }} kg
+                        <p class="mt-2 text-title-xl font-bold text-on-surface">
+                            {{ number_format($prediksi->hasil_tahu_kg, 2) }}
+                            <span class="text-title-md font-normal text-on-surface-variant">kg</span>
                         </p>
                     </div>
-
 
                     {{-- WAKTU PEMASAKAN --}}
-                    <div class="rounded-tm-md border border-outline-variant bg-surface-container-low p-4">
+                    <div class="rounded-tm-md border border-secondary/20 bg-secondary-container/30 p-4">
                         <div class="flex items-center gap-2">
-                            <x-icon name="flame" class="h-5 w-5 text-primary" />
-
-                            <p class="text-body-sm text-on-surface-variant">
-                                Prediksi pemasakan
-                            </p>
+                            <x-icon name="flame" class="h-5 w-5 text-secondary" />
+                            <p class="text-body-sm text-on-surface-variant">Prediksi pemasakan</p>
                         </div>
-
-                        <p class="mt-2 text-title-lg font-bold text-on-surface">
-                            {{ \App\Models\PrediksiAi::label(
-                                $prediksi->waktu_memasak_menit
-                            ) }}
+                        <p class="mt-2 text-title-xl font-bold text-on-surface">
+                            {{ \App\Models\PrediksiAi::label($prediksi->waktu_memasak_menit) }}
                         </p>
                     </div>
 
+                </div>
+
+                {{-- DETAIL TABEL PREDIKSI --}}
+                <div class="mt-4 overflow-x-auto rounded-tm-md border border-outline-variant">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-outline-variant bg-surface-container-low text-left">
+                                <th class="px-4 py-3 font-semibold text-on-surface-variant">Parameter</th>
+                                <th class="px-4 py-3 text-right font-semibold text-on-surface-variant">Nilai</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant">
+                            <tr class="bg-surface">
+                                <td class="px-4 py-3 text-on-surface-variant">Jumlah gambar dianalisis</td>
+                                <td class="px-4 py-3 text-right font-semibold text-on-surface">{{ $prediksi->jumlah_gambar }} foto</td>
+                            </tr>
+                            <tr class="bg-surface-container-low/50">
+                                <td class="px-4 py-3 text-on-surface-variant">Persentase kedelai baik (Good)</td>
+                                <td class="px-4 py-3 text-right font-semibold text-green-600">{{ number_format($prediksi->good_percent, 2) }}%</td>
+                            </tr>
+                            <tr class="bg-surface">
+                                <td class="px-4 py-3 text-on-surface-variant">Persentase kedelai buruk (Bad)</td>
+                                <td class="px-4 py-3 text-right font-semibold text-red-600">{{ number_format($prediksi->bad_percent, 2) }}%</td>
+                            </tr>
+                            <tr class="bg-surface-container-low/50">
+                                <td class="px-4 py-3 text-on-surface-variant">Prediksi hasil tahu</td>
+                                <td class="px-4 py-3 text-right font-semibold text-on-surface">{{ number_format($prediksi->hasil_tahu_kg, 2) }} kg</td>
+                            </tr>
+                            <tr class="bg-surface">
+                                <td class="px-4 py-3 text-on-surface-variant">Prediksi durasi pemasakan</td>
+                                <td class="px-4 py-3 text-right font-semibold text-on-surface">{{ \App\Models\PrediksiAi::label($prediksi->waktu_memasak_menit) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
 
@@ -766,48 +781,45 @@
                     </h3>
                 </div>
 
-
-                <div class="space-y-2">
-
-                    @foreach ($produksi->prediksiAi->sortByDesc('created_at') as $riwayat)
-
-                        <div class="flex flex-wrap items-center justify-between gap-3 rounded-tm-md bg-surface-container-low p-3">
-
-                            <div class="flex min-w-0 items-center gap-3">
-                                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-tm-md bg-surface-container-high text-on-surface-variant">
-                                    <x-icon name="file-chart-column" class="h-5 w-5" />
-                                </div>
-
-                                <div class="min-w-0">
-                                    <p class="text-label-md font-semibold text-on-surface">
-                                        {{ $riwayat->created_at->translatedFormat('d M Y, H:i') }}
-                                    </p>
-
-                                    <p class="text-body-sm text-on-surface-variant">
-                                        {{ $riwayat->jumlah_gambar }} foto
-                                        · Good {{ number_format($riwayat->good_percent, 1) }}%
-                                        · Bad {{ number_format($riwayat->bad_percent, 1) }}%
-                                    </p>
-                                </div>
-                            </div>
-
-
-                            <div class="shrink-0 text-right">
-                                <p class="font-bold text-on-surface">
-                                    {{ number_format($riwayat->hasil_tahu_kg, 2) }} kg
-                                </p>
-
-                                <p class="text-body-sm text-on-surface-variant">
-                                    {{ \App\Models\PrediksiAi::label(
-                                        $riwayat->waktu_memasak_menit
-                                    ) }}
-                                </p>
-                            </div>
-
-                        </div>
-
-                    @endforeach
-
+                <div class="overflow-x-auto rounded-tm-md border border-outline-variant">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-outline-variant bg-surface-container-low text-left">
+                                <th class="px-4 py-3 font-semibold text-on-surface-variant">Waktu</th>
+                                <th class="px-4 py-3 text-center font-semibold text-on-surface-variant">Foto</th>
+                                <th class="px-4 py-3 text-center font-semibold text-on-surface-variant">Good</th>
+                                <th class="px-4 py-3 text-center font-semibold text-on-surface-variant">Bad</th>
+                                <th class="px-4 py-3 text-right font-semibold text-on-surface-variant">Hasil Tahu</th>
+                                <th class="px-4 py-3 text-right font-semibold text-on-surface-variant">Durasi Masak</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-outline-variant">
+                            @foreach ($produksi->prediksiAi->sortByDesc('created_at') as $loop_i => $riwayat)
+                                <tr class="{{ $loop_i === 0 ? 'bg-primary-container/20 font-medium' : 'bg-surface hover:bg-surface-container-low' }} transition">
+                                    <td class="px-4 py-3">
+                                        <p class="font-semibold text-on-surface">
+                                            {{ $riwayat->created_at->translatedFormat('d M Y') }}
+                                        </p>
+                                        <p class="text-xs text-on-surface-variant">{{ $riwayat->created_at->format('H:i') }}</p>
+                                    </td>
+                                    <td class="px-4 py-3 text-center text-on-surface">{{ $riwayat->jumlah_gambar }}</td>
+                                    <td class="px-4 py-3 text-center font-semibold text-green-600">
+                                        {{ number_format($riwayat->good_percent, 1) }}%
+                                    </td>
+                                    <td class="px-4 py-3 text-center font-semibold text-red-600">
+                                        {{ number_format($riwayat->bad_percent, 1) }}%
+                                    </td>
+                                    <td class="px-4 py-3 text-right font-bold text-on-surface">
+                                        {{ number_format($riwayat->hasil_tahu_kg, 2) }}
+                                        <span class="font-normal text-on-surface-variant">kg</span>
+                                    </td>
+                                    <td class="px-4 py-3 text-right text-on-surface">
+                                        {{ \App\Models\PrediksiAi::label($riwayat->waktu_memasak_menit) }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
 
             </div>
@@ -1144,73 +1156,62 @@
             description="Hasil penimbangan aktual yang telah dicatat pada batch ini."
         >
 
-            <div class="space-y-3">
-
-                @foreach ($produksi->hasil as $hasil)
-
-                    <div class="rounded-tm-md bg-surface-container-low p-3">
-
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-
-                            <div class="flex min-w-0 items-center gap-3">
-                                <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                                    <x-icon name="package" class="h-5 w-5" />
-                                </div>
-
-                                <div class="min-w-0">
-                                    <p class="break-words font-semibold text-on-surface">
-                                        {{ $hasil->produk?->nama ?? 'Produk tidak ditemukan' }}
-                                    </p>
-
-                                    <p class="text-xs text-on-surface-variant">
-                                        Dicatat oleh {{ $hasil->pencatat?->name ?? '-' }}
-                                    </p>
-                                </div>
-                            </div>
-
-
-                            <div class="grid grid-cols-2 gap-3 text-right">
-
-                                <div>
-                                    <p class="text-xs text-on-surface-variant">
-                                        Tahu baik
-                                    </p>
-
-                                    <p class="font-bold text-on-surface">
-                                        {{ number_format(
-                                            (float) $hasil->jumlah_baik,
-                                            2,
-                                            ',',
-                                            '.'
-                                        ) }}
-                                        {{ $hasil->produk?->satuan }}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <p class="text-xs text-on-surface-variant">
-                                        Tahu reject
-                                    </p>
-
-                                    <p class="font-bold text-error">
-                                        {{ number_format(
-                                            (float) $hasil->jumlah_reject,
-                                            2,
-                                            ',',
-                                            '.'
-                                        ) }}
-                                        {{ $hasil->produk?->satuan }}
-                                    </p>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                @endforeach
-
+            <div class="overflow-x-auto rounded-tm-md border border-outline-variant">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-outline-variant bg-surface-container-low text-left">
+                            <th class="px-4 py-3 font-semibold text-on-surface-variant">Produk</th>
+                            <th class="px-4 py-3 font-semibold text-on-surface-variant">Dicatat Oleh</th>
+                            <th class="px-4 py-3 text-right font-semibold text-green-700">Tahu Baik</th>
+                            <th class="px-4 py-3 text-right font-semibold text-red-600">Tahu Reject</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-outline-variant">
+                        @foreach ($produksi->hasil as $i => $hasil)
+                            <tr class="{{ $i % 2 === 0 ? 'bg-surface' : 'bg-surface-container-low/40' }}">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2">
+                                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
+                                            <x-icon name="package" class="h-4 w-4" />
+                                        </div>
+                                        <div>
+                                            <p class="font-semibold text-on-surface">
+                                                {{ $hasil->produk?->nama ?? 'Produk tidak ditemukan' }}
+                                            </p>
+                                            <p class="text-xs text-on-surface-variant">{{ $hasil->produk?->satuan }}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-on-surface-variant">
+                                    {{ $hasil->pencatat?->name ?? '-' }}
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <span class="font-bold text-green-700">
+                                        {{ number_format((float) $hasil->jumlah_baik, 2, ',', '.') }}
+                                    </span>
+                                    <span class="text-on-surface-variant"> {{ $hasil->produk?->satuan }}</span>
+                                </td>
+                                <td class="px-4 py-3 text-right">
+                                    <span class="font-bold text-red-600">
+                                        {{ number_format((float) $hasil->jumlah_reject, 2, ',', '.') }}
+                                    </span>
+                                    <span class="text-on-surface-variant"> {{ $hasil->produk?->satuan }}</span>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr class="border-t-2 border-outline-variant bg-surface-container-low">
+                            <td colspan="2" class="px-4 py-3 font-semibold text-on-surface-variant">Total</td>
+                            <td class="px-4 py-3 text-right font-bold text-green-700">
+                                {{ number_format($produksi->hasil->sum('jumlah_baik'), 2, ',', '.') }}
+                            </td>
+                            <td class="px-4 py-3 text-right font-bold text-red-600">
+                                {{ number_format($produksi->hasil->sum('jumlah_reject'), 2, ',', '.') }}
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
 
         </x-card>
