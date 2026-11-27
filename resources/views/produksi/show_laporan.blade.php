@@ -150,7 +150,7 @@
             <div class="rounded-tm-md bg-surface-container-low p-4">
                 <div class="flex items-center gap-2">
                     <div class="flex h-9 w-9 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                        <x-icon name="timer" class="h-5 w-5" />
+                        <x-icon name="schedule" class="h-5 w-5" />
                     </div>
 
                     <p class="text-body-sm text-on-surface-variant">
@@ -170,7 +170,7 @@
             <div class="rounded-tm-md bg-surface-container-low p-4">
                 <div class="flex items-center gap-2">
                     <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container">
-                        <x-icon name="flame" class="h-6 w-6" />
+                        <x-icon name="thermostat" class="h-6 w-6" />
                     </div>
 
                     <p class="text-body-sm text-on-surface-variant">
@@ -190,7 +190,7 @@
             <div class="rounded-tm-md border border-primary/20 bg-primary-container/40 p-4 sm:col-span-2">
                 <div class="flex items-center gap-2">
                     <div class="flex h-10 w-10 items-center justify-center rounded-tm-md bg-primary text-on-primary">
-                        <x-icon name="clock" class="h-5 w-5" />
+                        <x-icon name="schedule" class="h-5 w-5" />
                     </div>
 
                     <div>
@@ -218,7 +218,7 @@
                 <div class="rounded-tm-md border border-tertiary/20 bg-tertiary-fixed p-4 sm:col-span-2">
                     <div class="flex items-center gap-2">
                         <div class="flex h-10 w-10 items-center justify-center rounded-tm-md bg-tertiary text-on-tertiary">
-                            <x-icon name="check-circle" class="h-5 w-5" />
+                            <x-icon name="check_circle" class="h-5 w-5" />
                         </div>
 
                         <div>
@@ -266,7 +266,7 @@
 
         @if ($produksi->waktu_selesai)
             <div class="mt-4 flex items-center gap-2 text-body-sm text-on-surface-variant">
-                <x-icon name="calendar-check" class="h-4 w-4" />
+                <x-icon name="calendar_today" class="h-4 w-4" />
 
                 <span>
                     Selesai pada
@@ -287,7 +287,7 @@
     >
         @if ($produksi->bahanBaku->isEmpty())
             <div class="rounded-tm-md bg-surface-container-low p-6 text-center">
-                <x-icon name="package-open" class="mx-auto h-10 w-10 text-on-surface-variant" />
+                <x-icon name="inventory" class="mx-auto h-10 w-10 text-on-surface-variant" />
                 <p class="mt-2 font-semibold text-on-surface-variant">Tidak ada bahan baku tercatat.</p>
             </div>
         @else
@@ -308,7 +308,7 @@
                                 <td class="px-4 py-3">
                                     <div class="flex items-center gap-2">
                                         <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                                            <x-icon name="package" class="h-4 w-4" />
+                                            <x-icon name="inventory_2" class="h-4 w-4" />
                                         </div>
                                         <span class="font-semibold text-on-surface">{{ $bahan->nama }}</span>
                                     </div>
@@ -358,7 +358,7 @@
                     <div class="mb-4">
                         <div class="flex items-center gap-3">
                             <div class="flex h-10 w-10 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container">
-                                <x-icon name="camera" class="h-5 w-5" />
+                                <x-icon name="play_circle" class="h-5 w-5" />
                             </div>
 
                             <div>
@@ -383,7 +383,7 @@
                             class="flex flex-col items-center justify-center gap-2 rounded-tm-md border-2 border-dashed border-primary bg-primary-container/30 p-5 text-center transition hover:bg-primary-container/60"
                         >
                             <span class="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-on-primary">
-                                <x-icon name="camera" class="h-6 w-6" />
+                                <x-icon name="sensors" class="h-6 w-6" />
                             </span>
 
                             <span class="font-semibold text-on-surface">
@@ -402,7 +402,7 @@
                             class="flex flex-col items-center justify-center gap-2 rounded-tm-md border-2 border-dashed border-outline-variant bg-surface-container-lowest p-5 text-center transition hover:bg-surface-container-high"
                         >
                             <span class="flex h-12 w-12 items-center justify-center rounded-full bg-secondary-container text-on-secondary-container">
-                                <x-icon name="images" class="h-6 w-6" />
+                                <x-icon name="inventory" class="h-6 w-6" />
                             </span>
 
                             <span class="font-semibold text-on-surface">
@@ -449,7 +449,7 @@
                         <div class="mb-3 flex items-center justify-between gap-2">
                             <div class="flex items-center gap-2">
                                 <div class="flex h-9 w-9 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container">
-                                    <x-icon name="video" class="h-5 w-5" />
+                                    <x-icon name="play_circle" class="h-5 w-5" />
                                 </div>
 
                                 <h3 class="font-semibold text-on-surface">
@@ -480,7 +480,7 @@
                                 :disabled="jumlahFoto >= {{ $maxFoto }}"
                                 class="flex items-center justify-center gap-2 rounded-tm-md bg-primary px-4 py-3 font-semibold text-on-primary disabled:cursor-not-allowed disabled:opacity-50"
                             >
-                                <x-icon name="camera" class="h-5 w-5" />
+                                <x-icon name="play_circle" class="h-5 w-5" />
                                 Ambil Foto
                             </button>
 
@@ -489,7 +489,7 @@
                                 @click="tutupKamera()"
                                 class="flex items-center justify-center gap-2 rounded-tm-md bg-error px-4 py-3 font-semibold text-white"
                             >
-                                <x-icon name="x" class="h-5 w-5" />
+                                <x-icon name="close" class="h-5 w-5" />
                                 Tutup Kamera
                             </button>
 
@@ -509,7 +509,7 @@
                         x-cloak
                         class="mt-3 flex items-start gap-2 rounded-tm-md bg-error-container p-3 text-sm text-on-error-container"
                     >
-                        <x-icon name="alert-circle" class="mt-0.5 h-5 w-5 shrink-0" />
+                        <x-icon name="error" class="mt-0.5 h-5 w-5 shrink-0" />
 
                         <span x-text="pesanError"></span>
                     </div>
@@ -520,7 +520,7 @@
 
                         <div class="flex items-center justify-between gap-2">
                             <div class="flex items-center gap-2">
-                                <x-icon name="images" class="h-5 w-5 text-primary" />
+                                <x-icon name="inventory" class="h-5 w-5 text-primary" />
 
                                 <span class="text-sm font-semibold text-on-surface">
                                     Foto dipilih
@@ -545,7 +545,7 @@
 
                                         <div class="flex min-w-0 items-center gap-2">
                                             <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                                                <x-icon name="image" class="h-5 w-5" />
+                                                <x-icon name="inventory_2" class="h-5 w-5" />
                                             </div>
 
                                             <div class="min-w-0">
@@ -568,7 +568,7 @@
                                             class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-error transition hover:bg-error-container"
                                             title="Hapus foto"
                                         >
-                                            <x-icon name="trash-2" class="h-4 w-4" />
+                                            <x-icon name="delete" class="h-4 w-4" />
                                         </button>
 
                                     </div>
@@ -582,7 +582,7 @@
                             x-show="files.length === 0"
                             class="mt-3 rounded-tm-md border border-dashed border-outline-variant p-5 text-center"
                         >
-                            <x-icon name="image-plus" class="mx-auto h-8 w-8 text-on-surface-variant" />
+                            <x-icon name="add_box" class="mx-auto h-8 w-8 text-on-surface-variant" />
 
                             <p class="mt-2 text-sm text-on-surface-variant">
                                 Belum ada foto yang dipilih.
@@ -629,7 +629,7 @@
 
                 <div class="mb-4 flex items-center gap-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container">
-                        <x-icon name="auto-awesome" class="h-5 w-5" />
+                        <x-icon name="auto_awesome" class="h-5 w-5" />
                     </div>
 
                     <div>
@@ -678,7 +678,7 @@
                     {{-- HASIL TAHU --}}
                     <div class="rounded-tm-md border border-primary/20 bg-primary-container/30 p-4">
                         <div class="flex items-center gap-2">
-                            <x-icon name="package-check" class="h-5 w-5 text-primary" />
+                            <x-icon name="verified" class="h-5 w-5 text-primary" />
                             <p class="text-body-sm text-on-surface-variant">Prediksi hasil tahu</p>
                         </div>
                         <p class="mt-2 text-title-xl font-bold text-on-surface">
@@ -690,7 +690,7 @@
                     {{-- WAKTU PEMASAKAN --}}
                     <div class="rounded-tm-md border border-secondary/20 bg-secondary-container/30 p-4">
                         <div class="flex items-center gap-2">
-                            <x-icon name="flame" class="h-5 w-5 text-secondary" />
+                            <x-icon name="thermostat" class="h-5 w-5 text-secondary" />
                             <p class="text-body-sm text-on-surface-variant">Prediksi pemasakan</p>
                         </div>
                         <p class="mt-2 text-title-xl font-bold text-on-surface">
@@ -736,7 +736,7 @@
 
 
                 <div class="mt-4 flex flex-wrap items-center gap-2 text-body-sm text-on-surface-variant">
-                    <x-icon name="clock" class="h-4 w-4" />
+                    <x-icon name="schedule" class="h-4 w-4" />
 
                     <span>
                         Diproses
@@ -751,7 +751,7 @@
 
             <div class="mt-4 rounded-tm-md border border-dashed border-outline-variant bg-surface-container-low p-5 text-center">
                 <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-secondary-container text-on-secondary-container">
-                    <x-icon name="brain-circuit" class="h-6 w-6" />
+                    <x-icon name="science" class="h-6 w-6" />
                 </div>
 
                 <p class="mt-3 font-semibold text-on-surface">
@@ -864,7 +864,7 @@
                 <div>
                     <div class="mb-3 flex items-center gap-2">
                         <div class="flex h-9 w-9 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container">
-                            <x-icon name="timer" class="h-5 w-5" />
+                            <x-icon name="schedule" class="h-5 w-5" />
                         </div>
 
                         <div>
@@ -923,7 +923,7 @@
 
                     <div class="mb-4 flex items-center gap-3">
                         <div class="flex h-10 w-10 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                            <x-icon name="package-check" class="h-5 w-5" />
+                            <x-icon name="verified" class="h-5 w-5" />
                         </div>
 
                         <div>
@@ -966,7 +966,7 @@
 
                                 <div class="mb-4 flex items-center gap-3">
                                     <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                                        <x-icon name="package" class="h-5 w-5" />
+                                        <x-icon name="inventory_2" class="h-5 w-5" />
                                     </div>
 
                                     <div>
@@ -1034,7 +1034,7 @@
 
                     <div class="mb-3 flex items-center gap-2">
                         <div class="flex h-9 w-9 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                            <x-icon name="notebook-pen" class="h-5 w-5" />
+                            <x-icon name="edit_note" class="h-5 w-5" />
                         </div>
 
                         <h3 class="font-semibold text-on-surface">
@@ -1097,7 +1097,7 @@
 
             <div class="mb-4 flex items-start gap-3 rounded-tm-md bg-error-container/50 p-3">
                 <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-tm-md bg-error-container text-on-error-container">
-                    <x-icon name="alert-triangle" class="h-5 w-5" />
+                    <x-icon name="warning" class="h-5 w-5" />
                 </div>
 
                 <p class="text-sm text-on-error-container">
@@ -1172,7 +1172,7 @@
                                 <td class="px-4 py-3">
                                     <div class="flex items-center gap-2">
                                         <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                                            <x-icon name="package" class="h-4 w-4" />
+                                            <x-icon name="inventory_2" class="h-4 w-4" />
                                         </div>
                                         <div>
                                             <p class="font-semibold text-on-surface">
@@ -1230,7 +1230,7 @@
         >
             <div class="flex items-start gap-3">
                 <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                    <x-icon name="notebook-text" class="h-5 w-5" />
+                    <x-icon name="receipt" class="h-5 w-5" />
                 </div>
 
                 <p class="whitespace-pre-line text-body-md text-on-surface">
@@ -1253,7 +1253,7 @@
         >
             <div class="flex items-start gap-3">
                 <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                    <x-icon name="clipboard-check" class="h-5 w-5" />
+                    <x-icon name="fact_check" class="h-5 w-5" />
                 </div>
 
                 <p class="whitespace-pre-line text-body-md text-on-surface">
@@ -1279,7 +1279,7 @@
             <div class="rounded-tm-md bg-error-container/50 p-4">
 
                 <div class="flex items-center gap-2">
-                    <x-icon name="alert-circle" class="h-5 w-5 text-on-error-container" />
+                    <x-icon name="error" class="h-5 w-5 text-on-error-container" />
 
                     <p class="font-semibold text-on-error-container">
                         Batch dibatalkan
@@ -1297,7 +1297,7 @@
 
                 <div class="mt-3 flex items-center gap-3 rounded-tm-md bg-surface-container-low p-3">
                     <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                        <x-icon name="package-check" class="h-5 w-5" />
+                        <x-icon name="verified" class="h-5 w-5" />
                     </div>
 
                     <div>
