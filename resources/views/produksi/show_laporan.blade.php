@@ -78,7 +78,7 @@
         <x-card class="min-w-0">
             <div class="flex items-start gap-3">
                 <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                    <x-icon name="person" class="h-6 w-6" />
+                    <x-icon name="account_circle" class="h-6 w-6" />
                 </div>
 
                 <div class="min-w-0">
@@ -118,7 +118,7 @@
         <x-card class="min-w-0">
             <div class="flex items-start gap-3">
                 <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container">
-                    <x-icon name="payments" class="h-6 w-6" />
+                    <x-icon name="point_of_sale" class="h-6 w-6" />
                 </div>
 
                 <div class="min-w-0">
@@ -170,7 +170,7 @@
             <div class="rounded-tm-md bg-surface-container-low p-4">
                 <div class="flex items-center gap-2">
                     <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container">
-                        <x-icon name="thermostat" class="h-6 w-6" />
+                        <x-icon name="schedule" class="h-6 w-6" />
                     </div>
 
                     <p class="text-body-sm text-on-surface-variant">
@@ -287,7 +287,7 @@
     >
         @if ($produksi->bahanBaku->isEmpty())
             <div class="rounded-tm-md bg-surface-container-low p-6 text-center">
-                <x-icon name="inventory" class="mx-auto h-10 w-10 text-on-surface-variant" />
+                <x-icon name="inventory_2" class="mx-auto h-10 w-10 text-on-surface-variant" />
                 <p class="mt-2 font-semibold text-on-surface-variant">Tidak ada bahan baku tercatat.</p>
             </div>
         @else
@@ -358,7 +358,7 @@
                     <div class="mb-4">
                         <div class="flex items-center gap-3">
                             <div class="flex h-10 w-10 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container">
-                                <x-icon name="play_circle" class="h-5 w-5" />
+                                <x-icon name="sensors" class="h-5 w-5" />
                             </div>
 
                             <div>
@@ -402,7 +402,7 @@
                             class="flex flex-col items-center justify-center gap-2 rounded-tm-md border-2 border-dashed border-outline-variant bg-surface-container-lowest p-5 text-center transition hover:bg-surface-container-high"
                         >
                             <span class="flex h-12 w-12 items-center justify-center rounded-full bg-secondary-container text-on-secondary-container">
-                                <x-icon name="inventory" class="h-6 w-6" />
+                                <x-icon name="inventory_2" class="h-6 w-6" />
                             </span>
 
                             <span class="font-semibold text-on-surface">
@@ -449,7 +449,7 @@
                         <div class="mb-3 flex items-center justify-between gap-2">
                             <div class="flex items-center gap-2">
                                 <div class="flex h-9 w-9 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container">
-                                    <x-icon name="play_circle" class="h-5 w-5" />
+                                    <x-icon name="sensors" class="h-5 w-5" />
                                 </div>
 
                                 <h3 class="font-semibold text-on-surface">
@@ -480,7 +480,7 @@
                                 :disabled="jumlahFoto >= {{ $maxFoto }}"
                                 class="flex items-center justify-center gap-2 rounded-tm-md bg-primary px-4 py-3 font-semibold text-on-primary disabled:cursor-not-allowed disabled:opacity-50"
                             >
-                                <x-icon name="play_circle" class="h-5 w-5" />
+                                <x-icon name="sensors" class="h-5 w-5" />
                                 Ambil Foto
                             </button>
 
@@ -520,7 +520,7 @@
 
                         <div class="flex items-center justify-between gap-2">
                             <div class="flex items-center gap-2">
-                                <x-icon name="inventory" class="h-5 w-5 text-primary" />
+                                <x-icon name="inventory_2" class="h-5 w-5 text-primary" />
 
                                 <span class="text-sm font-semibold text-on-surface">
                                     Foto dipilih
@@ -629,7 +629,7 @@
 
                 <div class="mb-4 flex items-center gap-3">
                     <div class="flex h-10 w-10 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container">
-                        <x-icon name="auto_awesome" class="h-5 w-5" />
+                        <x-icon name="schedule" class="h-5 w-5" />
                     </div>
 
                     <div>
@@ -678,7 +678,7 @@
                     {{-- HASIL TAHU --}}
                     <div class="rounded-tm-md border border-primary/20 bg-primary-container/30 p-4">
                         <div class="flex items-center gap-2">
-                            <x-icon name="verified" class="h-5 w-5 text-primary" />
+                            <x-icon name="check_circle" class="h-5 w-5 text-primary" />
                             <p class="text-body-sm text-on-surface-variant">Prediksi hasil tahu</p>
                         </div>
                         <p class="mt-2 text-title-xl font-bold text-on-surface">
@@ -690,7 +690,7 @@
                     {{-- WAKTU PEMASAKAN --}}
                     <div class="rounded-tm-md border border-secondary/20 bg-secondary-container/30 p-4">
                         <div class="flex items-center gap-2">
-                            <x-icon name="thermostat" class="h-5 w-5 text-secondary" />
+                            <x-icon name="schedule" class="h-5 w-5 text-secondary" />
                             <p class="text-body-sm text-on-surface-variant">Prediksi pemasakan</p>
                         </div>
                         <p class="mt-2 text-title-xl font-bold text-on-surface">
@@ -751,7 +751,7 @@
 
             <div class="mt-4 rounded-tm-md border border-dashed border-outline-variant bg-surface-container-low p-5 text-center">
                 <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-secondary-container text-on-secondary-container">
-                    <x-icon name="science" class="h-6 w-6" />
+                    <x-icon name="category" class="h-6 w-6" />
                 </div>
 
                 <p class="mt-3 font-semibold text-on-surface">
@@ -773,7 +773,7 @@
 
                 <div class="mb-3 flex items-center gap-2">
                     <div class="flex h-9 w-9 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                        <x-icon name="history" class="h-5 w-5" />
+                        <x-icon name="schedule" class="h-5 w-5" />
                     </div>
 
                     <h3 class="font-bold text-on-surface">
@@ -923,7 +923,7 @@
 
                     <div class="mb-4 flex items-center gap-3">
                         <div class="flex h-10 w-10 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                            <x-icon name="verified" class="h-5 w-5" />
+                            <x-icon name="check_circle" class="h-5 w-5" />
                         </div>
 
                         <div>
@@ -1034,7 +1034,7 @@
 
                     <div class="mb-3 flex items-center gap-2">
                         <div class="flex h-9 w-9 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                            <x-icon name="edit_note" class="h-5 w-5" />
+                            <x-icon name="fact_check" class="h-5 w-5" />
                         </div>
 
                         <h3 class="font-semibold text-on-surface">
@@ -1230,7 +1230,7 @@
         >
             <div class="flex items-start gap-3">
                 <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                    <x-icon name="receipt" class="h-5 w-5" />
+                    <x-icon name="receipt_long" class="h-5 w-5" />
                 </div>
 
                 <p class="whitespace-pre-line text-body-md text-on-surface">
@@ -1297,7 +1297,7 @@
 
                 <div class="mt-3 flex items-center gap-3 rounded-tm-md bg-surface-container-low p-3">
                     <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-tm-md bg-secondary-container text-on-secondary-container">
-                        <x-icon name="verified" class="h-5 w-5" />
+                        <x-icon name="check_circle" class="h-5 w-5" />
                     </div>
 
                     <div>
