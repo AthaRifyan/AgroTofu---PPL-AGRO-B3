@@ -350,6 +350,8 @@
                 class="space-y-4"
                 x-data="laporanKamera()"
                 @submit="periksaSebelumKirim($event)"
+                x-on:submit="if (files.length > 0) loading = true"
+                x-on:pageshow.window="loading = false"
             >
                 @csrf
 
@@ -1331,6 +1333,7 @@
             files: [],
             pesanError: '',
             jumlahFoto: 0,
+            loading: false,
 
             // Membuka kamera perangkat.
             async bukaKamera() {
