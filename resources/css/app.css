@@ -25,7 +25,8 @@
     }
 
     body {
-        @apply bg-surface text-on-surface;
+        @apply text-on-surface;
+        background-color: #e8e2d9;
         overscroll-behavior: none;
     }
 }

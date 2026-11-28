@@ -24,7 +24,7 @@
 <div x-data="{ sheet: false }" x-on:keydown.escape.window="sheet = false">
 
     {{-- ============ DESKTOP: sidebar ============ --}}
-    <aside class="fixed left-0 top-0 z-50 hidden h-full w-72 flex-col justify-between bg-surface-container-lowest shadow-[0_1px_8px_rgba(77,42,0,0.05)] lg:flex">
+    <aside class="fixed left-0 top-0 z-50 hidden h-full w-72 flex-col justify-between lg:flex" style="background-color:#fffcfa; border-right: 1px solid rgba(77,42,0,0.08); box-shadow: 2px 0 16px rgba(77,42,0,0.06);">
         <div class="flex min-h-0 flex-1 flex-col">
             <a href="{{ route('dashboard') }}" class="flex h-20 shrink-0 items-center gap-2 bg-surface-container-low px-6">
                 <span class="flex h-10 w-10 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container shadow-[0_2px_8px_-2px_rgba(77,42,0,0.12)]"><x-icon name="grain" class="text-[24px]" /></span>
@@ -77,7 +77,7 @@
     </aside>
 
     {{-- ============ DESKTOP: header ============ --}}
-    <header class="fixed left-72 right-0 top-0 z-40 hidden h-20 items-center justify-between bg-surface/90 px-8 shadow-[0_1px_8px_rgba(77,42,0,0.04)] backdrop-blur-xl lg:flex">
+    <header class="fixed left-72 right-0 top-0 z-40 hidden h-20 items-center justify-between px-8 shadow-[0_1px_8px_rgba(77,42,0,0.07)] backdrop-blur-xl lg:flex" style="background-color:rgba(255,252,250,0.92);">
         <div class="flex items-center gap-2 text-body-md text-on-surface-variant">
             <x-icon name="calendar_today" class="text-[20px] text-primary" />
             <span>{{ now('Asia/Jakarta')->translatedFormat('l, d F Y') }}</span>
@@ -92,7 +92,7 @@
     </header>
 
     {{-- ============ HP: top bar ============ --}}
-    <header class="sticky top-0 z-30 bg-surface/95 pt-[env(safe-area-inset-top)] shadow-[0_1px_8px_rgba(77,42,0,0.04)] backdrop-blur lg:hidden">
+    <header class="sticky top-0 z-30 pt-[env(safe-area-inset-top)] shadow-[0_1px_8px_rgba(77,42,0,0.07)] backdrop-blur lg:hidden" style="background-color:rgba(255,252,250,0.95);">
         <div class="flex h-14 items-center justify-between px-4">
             <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5">
                 <span class="flex h-9 w-9 items-center justify-center rounded-tm-md bg-primary-container text-on-primary-container shadow-sm"><x-icon name="grain" class="text-[22px]" /></span>
@@ -103,7 +103,7 @@
     </header>
 
     {{-- ============ HP: bar bawah ============ --}}
-    <nav class="fixed inset-x-0 bottom-0 z-30 bg-surface/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_8px_rgba(77,42,0,0.06)] backdrop-blur lg:hidden" aria-label="Menu utama">
+    <nav class="fixed inset-x-0 bottom-0 z-30 pb-[env(safe-area-inset-bottom)] shadow-[0_-1px_8px_rgba(77,42,0,0.08)] backdrop-blur lg:hidden" aria-label="Menu utama" style="background-color:rgba(255,252,250,0.95);">
         <div class="mx-auto flex max-w-lg items-stretch justify-around px-2 py-1.5">
             @foreach ($bar as $m)
                 @php $aktif = request()->routeIs($m['match']); @endphp

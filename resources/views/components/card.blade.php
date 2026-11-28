@@ -1,6 +1,6 @@
 @props(['title' => null, 'description' => null])
 
-<section {{ $attributes->merge(['class' => 'rounded-tm-md bg-surface-container-lowest p-5 shadow-sm sm:p-6']) }}>
+<section {{ $attributes->merge(['class' => 'rounded-tm-md p-5 sm:p-6 shadow-md']) }} style="background-color:#fffcfa; border: 1px solid rgba(77,42,0,0.08);">
     @if ($title || isset($actions))
         <div class="mb-4 flex items-start justify-between gap-3">
             <div class="min-w-0">

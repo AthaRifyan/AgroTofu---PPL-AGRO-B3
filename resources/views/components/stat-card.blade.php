@@ -12,7 +12,7 @@
     $panjang = mb_strlen(trim(strip_tags((string) $slot))) > 10;
 @endphp
 
-<{{ $el }} @if ($href) href="{{ $href }}" @endif {{ $attributes->merge(['class' => 'flex flex-col justify-between rounded-tm-md bg-surface-container-lowest p-5 shadow-sm transition-shadow hover:shadow-md' . ($href ? ' focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary' : '')]) }}>
+<{{ $el }} @if ($href) href="{{ $href }}" @endif {{ $attributes->merge(['class' => 'flex flex-col justify-between rounded-tm-md p-5 shadow-md transition-shadow hover:shadow-lg' . ($href ? ' focus:outline-none focus-visible:ring-2 focus-visible:ring-secondary' : '')]) }} style="background-color:#fffcfa; border: 1px solid rgba(77,42,0,0.08);">
     <div class="flex items-start justify-between gap-3">
         <span class="min-w-0 text-label-sm uppercase tracking-wider text-on-surface-variant">{{ $label }}</span>
         <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-tm-md {{ $tones[$tone] ?? $tones['neutral'] }}">
